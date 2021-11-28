@@ -1,33 +1,33 @@
 import java.util.ArrayList;
 
 public class Student extends Participant{
-    private double GPA;
-    private int ES;
+    private double GPA = -1.0;
+    private int ES = -1;
 
     // constructors
     public Student(){
 
     }
 
-    public Student(String name, double GPA, int ES, int nSchools){
-
+    public Student(String name, double GPA, int ES){
+    	super.setName(name);
     }
 
     // getters and setters
     public double getGPA(){
-        return 0.00;
+        return this.GPA;
     }
 
     public int getES(){
-        return 0;
+        return this.ES;
     }
 
     public void setGPA(double GPA){
-
+        this.GPA = GPA;
     }
 
     public void setES(int ES){
-
+        this.ES = ES;
     }
 
     public void editInfo (ArrayList <School> H, boolean canEditRankings ){ // user info

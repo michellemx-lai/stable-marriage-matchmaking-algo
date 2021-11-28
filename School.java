@@ -8,8 +8,8 @@ public class School extends Participant{
 
     }
 
-    public School(String name, double alpha, int maxMatches, int nStudents){
-
+    public School(String name, double alpha, int maxMatches){
+        super(name, maxMatches);
     }
 
     // getters and setters

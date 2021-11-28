@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Participant {
     private String name;
-    private int[] rankings;
+    private ArrayList<Integer> rankings = new ArrayList<Integer>();
     private ArrayList<Integer> matches = new ArrayList<Integer>();
     private int regret;
     private int maxMatches;
@@ -11,10 +11,9 @@ public class Participant {
     public Participant(){
     }
 
-    public Participant(String name, int maxMatches, int nParticipants){ 
+    public Participant(String name, int maxMatches){ 
         this.name = name;
         this.maxMatches = maxMatches;
-        this.rankings = new int[nParticipants];
     }
 
     // getters
@@ -26,8 +25,8 @@ public class Participant {
     	
     	int rank = 0; //initialize rank
     	
-		for (int j = 0; j < this.rankings.length; j++) { //if the participant index matches the index in the rankings, we found the participant's rank 
-			if (i == rankings[j]) {
+		for (int j = 0; j < this.rankings.size(); j++) { //if the participant index matches the index in the rankings, we found the participant's rank 
+			if (i == rankings.get(j)) {
 				rank = j + 1;
 			}
 		}
@@ -35,12 +34,16 @@ public class Participant {
         return rank;
     }
 
+    public ArrayList<Integer> getRankings(){ //I made
+        return this.rankings;
+    }
+
     public int getMatch(int i){
     	
         return 0;
     }
 
-    public int getRegret(){
+    public int getRegret(){ //add up al the regrets in the matchs!!
         return 0;
     }
 
@@ -68,19 +71,24 @@ public class Participant {
     public void setRanking(int i, int r){
 
     }
+    
+    public void setRankings(ArrayList<Integer> rankings){ //I made
+        this.rankings = rankings;
+    }
 
     public void setMatch(int m){
-
+    	this.matches.add(m);
     }
 
     public void setRegret(int r){
 
     }
-
+    
+    /*
     public void setNParticipants(int n){ // set rankings array size
-        this.rankings = new int[n];
     }
 
+*/
     public void setMaxMatches(int n){
 
     }
