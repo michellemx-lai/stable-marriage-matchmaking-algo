@@ -12,7 +12,12 @@ public class Pro5_laimic12 {
 		//initialize variables
 		ArrayList<Student> S = new ArrayList<Student>(); //create an ArrayList to store students
 		ArrayList<School> H = new ArrayList<School>(); //create an ArrayList to store schools
-    	SMPSolver smpSolver = new SMPSolver(S,H);
+
+	    ArrayList<Student> S2 = new ArrayList<Student>(); //create an ArrayList to store a copy of students
+		ArrayList<School> H2 = new ArrayList<School>(); //create an ArrayList to store a copy schools
+	
+    	SMPSolver smpSolverStudentSuitors = new SMPSolver();
+    	SMPSolver smpSolverSchoolSuitors = new SMPSolver();
 		
 		do {
 			//print an error message and ask user for a valid string input each time the user provides an invalid input. 
@@ -34,7 +39,7 @@ public class Pro5_laimic12 {
 				}
 	
 				//error message 
-				if (!valid || !((menuInput.equalsIgnoreCase("L") || menuInput.equalsIgnoreCase("E") || menuInput.equalsIgnoreCase("P") || menuInput.equalsIgnoreCase("M") || menuInput.equalsIgnoreCase("D") || menuInput.equalsIgnoreCase("R") || menuInput.equalsIgnoreCase("Q")))) {
+				if (!valid || !((menuInput.equalsIgnoreCase("L") || menuInput.equalsIgnoreCase("E") || menuInput.equalsIgnoreCase("P") || menuInput.equalsIgnoreCase("M") || menuInput.equalsIgnoreCase("D") || menuInput.equalsIgnoreCase("X") || menuInput.equalsIgnoreCase("R") || menuInput.equalsIgnoreCase("Q")))) {
 					valid = false;
 					System.out.print("\n"
 							+ "ERROR: Invalid menu choice!\n"
@@ -64,15 +69,31 @@ public class Pro5_laimic12 {
 					}
 				}
 				
-    			if (smpSolver.getMatchesExist() == true) {
-    				smpSolver.reset(S, H);
+				H2 = copySchools(H);
+			    S2 = copyStudents(S);
+			    
+    			if (smpSolverStudentSuitors.matchesExist() == true && (nNewSchools != 0 || nNewStudents != 0)) {
+    				smpSolverStudentSuitors.reset(); //redundant?
+    				smpSolverSchoolSuitors.reset(); //print suitor stats first because students are the suitors
+    				
+    		    	smpSolverStudentSuitors = new SMPSolver();
+    		    	smpSolverSchoolSuitors = new SMPSolver();
+    		    	
+    		    	smpSolverStudentSuitors.setParticipants(S2,H2);
+    		    	smpSolverStudentSuitors.setSuitorFirst(true);
+    		    	
+    		    	smpSolverSchoolSuitors.setParticipants(S2,H2);
+    		    	smpSolverSchoolSuitors.setSuitorFirst(false); //do not print suitor stats first because schools are the suitors
     			}
-
 			}
 	
 			else if (menuInput.equalsIgnoreCase("E")) {
-				editData(S,H);
-				smpSolver.reset(S, H); 
+				/*
+				editData(S2,H2);
+
+				smpSolverStudentSuitors.reset(S2,H2); 
+				smpSolverSchoolSuitors.reset(S2,H2); 
+				*/
 			}
 	
 			else if (menuInput.equalsIgnoreCase("P")) {
@@ -103,38 +124,61 @@ public class Pro5_laimic12 {
 	
 			else if (menuInput.equalsIgnoreCase("M")) {
 				
-				boolean matchingCanProceed = smpSolver.matchingCanProceed();
+				boolean matchingCanProceed = smpSolverStudentSuitors.matchingCanProceed();
 
 				if (matchingCanProceed == true) {
 					
-			    	//smpSolver.setSuitorFirst(true);  SOMEHTING LIKE THIS
+					//match with students as suitors
+					long startStudentSuitors = System.currentTimeMillis(); //Get current time
+			        smpSolverStudentSuitors.match();
+			    	long elapsedTimeStudentSuitors = System.currentTimeMillis() - startStudentSuitors; // Get elapsed time in ms
 
-					long start = System.currentTimeMillis(); //Get current time
-			        smpSolver.match();
-			    	long elapsedTime = System.currentTimeMillis() - start; // Get elapsed time in ms
-
-					smpSolver.printStats(); //print regrets and stability
+			    	smpSolverStudentSuitors.printStats(); //print regrets and stability
 					
-					//print time elapsed
-			        System.out.print(S.size() + " matches made in " + elapsedTime + "ms!\n"
+			        System.out.print(S.size() + " matches made in " + elapsedTimeStudentSuitors + "ms!\n" //print time elapsed
+			        		+ "\n"
+			        		+ "");
+					
+			        //match with schools as suitors
+					long startSchoolSuitors = System.currentTimeMillis(); //Get current time
+			        smpSolverSchoolSuitors.match();
+			    	long elapsedTimeSchoolSuitors = System.currentTimeMillis() - startSchoolSuitors; // Get elapsed time in ms
+
+			    	smpSolverSchoolSuitors.printStats(); //print regrets and stability
+					
+			        System.out.print(S.size() + " matches made in " + elapsedTimeSchoolSuitors + "ms!\n" //print time elapsed
 			        		+ "\n"
 			        		+ "");
 				}
 			}
 	
 			else if (menuInput.equalsIgnoreCase("D")) {
-				if (smpSolver.getMatchesExist() == false) { 
+				if (smpSolverStudentSuitors.matchesExist() == false) { 
 					System.out.print("ERROR: No matches exist!");
 				}
 				else {
-	                smpSolver.print();
+					smpSolverStudentSuitors.print();
+					smpSolverSchoolSuitors.print();
 				}
+			}
+			
+			
+			else if (menuInput.equalsIgnoreCase("X")) {
+				if (smpSolverStudentSuitors.matchesExist() == false) { 
+					System.out.print("ERROR: No matches exist!");
+				}
+				else {
+					printComparison(smpSolverStudentSuitors,smpSolverSchoolSuitors);
+				}			
 			}
 	
 			else if (menuInput.equalsIgnoreCase("R")) {
-				smpSolver.reset(S, H);
+				smpSolverStudentSuitors.reset();
+				smpSolverSchoolSuitors.reset();
 				S.clear();
 				H.clear();
+				S2.clear();
+				H2.clear();
 				
 				System.out.print("Database cleared!\n"
 						+ "\n"
@@ -187,16 +231,18 @@ public class Pro5_laimic12 {
 	        		String[] splitString = line.split(",");	//split up the line at each comma
 	        		String name; //the first element is the name of the school
 	        		Double alpha;
+	        		int nOpenings = 0; 
 	        		
-	        		if (splitString.length == 2) { //make sure the school is valid (has name and alpha)
+	        		if (splitString.length == 3) { //make sure the school is valid (has name, alpha, and number of openings)
 		    			nSchoolsInFile ++; //the number of schools increases by 1
 	
-	    				name = splitString[0];
+	    				name = splitString[0]; //the first element is the name
 	    				alpha = Double.parseDouble(splitString[1]); //the second element is the GPA weight (alpha) 
+	    				nOpenings = Integer.parseInt(splitString[2]); //the third element is number of openings
 		        	    
 	    				//make sure the school is valid 
-	    				if (alpha >= 0.0 && alpha <= 1.0) { //alpha must be between 0 and 1
-		    				School school = new School(name, alpha); //create a new school object with the name and alpha
+	    				if (alpha >= 0.0 && alpha <= 1.0 && nOpenings > 0) { //alpha must be between 0 and 1
+		    				School school = new School(name, alpha, nOpenings); //create a new school object with the name and alpha
 			    			H.add(school); //add this school to the list of schools
 			    			nNewSchools ++; //the number of (valid) new schools added increases by 1
 	    				}
@@ -322,6 +368,7 @@ public class Pro5_laimic12 {
     	return nNewStudents; //return the number of new schools
     }
     
+    /*
     //display sub-menu to edit students and schools
     public static void editData(ArrayList<Student> S, ArrayList<School> H) throws IOException, NumberFormatException {
 		int nStudents = S.size();
@@ -391,7 +438,10 @@ public class Pro5_laimic12 {
 			displayMenu();
 		}
     }
+    */
     
+    /*
+
     //sub-area to edit students. Update the edited student's regret if necessary. Any existing school rankings & regrets are recalculated after editing a student.
     public static void editStudents(ArrayList<Student> S, ArrayList<School> H) throws IOException {
     	int nStudents = S.size();
@@ -470,7 +520,9 @@ public class Pro5_laimic12 {
 			System.out.println("\n");
 		} while ( studentIndex != 0 );
     }
+    */
     
+    /*
     
     //sub-area to edit schools. Update the edited school's existing rankings and regrets.
     public static void editSchools(ArrayList<Student> S, ArrayList<School> H) throws IOException{
@@ -507,6 +559,8 @@ public class Pro5_laimic12 {
 			} 
 		} while (schoolIndex != 0 );
     }
+    
+    */
     
     //print students to screen (include matched school if one exists)
     public static void printStudents(ArrayList<Student> S, ArrayList<School> H) throws IOException{
@@ -574,10 +628,111 @@ public class Pro5_laimic12 {
 		System.out.println("\n");
     }    
     public static void printComparison(SMPSolver GSS, SMPSolver GSH) { //print comparison of student-optimal and school-optimal solutions
-    	 GSS.setSuitorFirst(false);
-    	 GSS.printStatsRow("");
-    	 
-    	 GSS.setSuitorFirst(true);
-    	 GSS.printStatsRow("");
+		GSS.setSuitorFirst(true);
+		GSS.printStatsRow("");
+		 
+		GSH.setSuitorFirst(false);
+		GSH.printStatsRow("");
+		 
+		System.out.print("\n"
+					+ "Solution              Stable    Avg school regret   Avg student regret     Avg total regret       Comp time (ms)\n"
+					+ "----------------------------------------------------------------------------------------------------------------");
+					
+		GSS.printStatsRow("Student optimal");
+		System.out.print("----------------------------------------------------------------------------------------------------------------");
+		GSH.printStatsRow("School optimal");
+		
+		String stableWinner;
+		String avgSchoolRegretWinner;
+		String avgStudentRegretWinner;
+		String avgTotalRegretWinner;
+		String compTimeWinner;
+		
+		if (GSS.isStable() == true && GSH.isStable() == false) {
+			stableWinner = "Student-opt";
+		}
+		else if (GSS.isStable() == false && GSH.isStable() == true) {
+			stableWinner = "School-opt";
+		}
+		else {
+			stableWinner = "Tie";
+		}
+		
+		if (GSS.getAvgReceiverRegret() > GSH.getAvgReceiverRegret()) {
+			avgSchoolRegretWinner = "School-opt";
+		}
+		else if (GSS.getAvgReceiverRegret() < GSH.getAvgReceiverRegret()) {
+			avgSchoolRegretWinner = "Student-opt";
+		}
+		else {
+			avgSchoolRegretWinner = "Tie";
+		}
+		
+		if (GSS.getAvgSuitorRegret() > GSH.getAvgSuitorRegret()) {
+			avgStudentRegretWinner = "School-opt";
+		}
+		else if (GSS.getAvgSuitorRegret() < GSH.getAvgSuitorRegret()) {
+			avgStudentRegretWinner = "Student-opt";
+		}
+		else {
+			avgStudentRegretWinner = "Tie";
+		}
+		
+		if (GSS.getAvgTotalRegret() > GSH.getAvgTotalRegret()) {
+			avgTotalRegretWinner = "School-opt";
+		}
+		else if (GSS.getAvgTotalRegret() < GSH.getAvgTotalRegret()) {
+			avgTotalRegretWinner = "Student-opt";
+		}
+		else {
+			avgTotalRegretWinner = "Tie";
+		}
+		
+		if (GSS.getTime() > GSH.getTime()) {
+			compTimeWinner = "School-opt";
+		}
+		else if (GSS.getTime() < GSH.getTime()) {
+			compTimeWinner = "Student-opt";
+		}
+		else {
+			compTimeWinner = "Tie";
+		}
+		
+		System.out.print("----------------------------------------------------------------------------------------------------------------\n"
+		+ "WINNER                   " + stableWinner + "                  " + avgSchoolRegretWinner + "                  " + avgStudentRegretWinner + "                  " + avgTotalRegretWinner + "           " + compTimeWinner + "\n"
+		+ "----------------------------------------------------------------------------------------------------------------");
     }
+    
+    public static ArrayList<School> copySchools(ArrayList<School> P){ //create independent copy of School ArrayList        		
+    	ArrayList<School> newList = new ArrayList<School>();
+    	for (int i = 0; i < P.size(); i ++) {
+    		String name = P.get(i).getName();
+    		double alpha = P.get(i).getAlpha();
+    		int maxMatches = P.get(i).getMaxMatches();
+    		int nStudents = P.get(i).getNParticipants();
+    		School temp = new School(name, alpha, maxMatches);
+    		for (int j = 0; j < nStudents; j ++) {
+    			temp.setRanking(j, P.get(i).getRanking(j));
+    		}
+    		newList.add(temp);
+    	}
+    	return newList;
+    }
+    
+    public static ArrayList<Student> copyStudents(ArrayList<Student> P){
+    	ArrayList<Student> newList = new ArrayList<Student>();
+    	for (int i = 0; i < P.size(); i ++) {
+    		String name = P.get(i).getName();
+    		double GPA = P.get(i).getGPA();
+    		int ES = P.get(i).getES();
+    		int nSchools = P.get(i).getNParticipants();
+    		Student temp = new Student(name, GPA, ES);
+    		for (int j = 0; j < nSchools; j ++) {
+    			temp.setRanking(j, P.get(i).getRanking(j));
+    		}
+    		newList.add(temp);
+    	}
+    	return newList;
+    }
+
 }

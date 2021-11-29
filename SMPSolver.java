@@ -3,13 +3,13 @@ import java.util.ArrayList;
 public class SMPSolver {
     public ArrayList <Participant> S = new ArrayList <>(); // suitors
     public ArrayList <Participant> R = new ArrayList <>(); // receivers
-    private double avgSuitorRegret; // average suitor regret
-    private double avgReceiverRegret; // average receiver regret
-    private double avgTotalRegret; // average total regret
-    private boolean matchesExist; // whether or not matches exist
-    private boolean stable; // whether or not matching is stable
-    private long compTime; // computation time
-    private boolean suitorFirst; // whether to print suitor stats first
+    private double avgSuitorRegret = 0.0; // average suitor regret
+    private double avgReceiverRegret = 0.0; // average receiver regret
+    private double avgTotalRegret = 0.0; // average total regret
+    private boolean matchesExist = false; // whether or not matches exist
+    private boolean stable = false; // whether or not matching is stable
+    private long compTime = 0; // computation time
+    private boolean suitorFirst = false; // whether to print suitor stats first
 
     public SMPSolver(){ // constructor
 
@@ -70,7 +70,6 @@ public class SMPSolver {
     }
 
     public void setParticipants(ArrayList <? extends Participant> S, ArrayList <? extends Participant> R){
-    	//IDKKK DOES IT HAVE TO DO WITH THE HINT???
     }
 
     // methods for matching
@@ -349,8 +348,16 @@ public class SMPSolver {
     }
 
     // reset everything
-    public void reset(){
-        
+    public void reset(){ //parameters??
+        S = new ArrayList <>(); // reset suitors
+        R = new ArrayList <>(); // reset receivers
+        avgSuitorRegret = 0.0; // reset average suitor regret
+        avgReceiverRegret = 0.0; // reset average receiver regret
+        avgTotalRegret = 0.0; // reset average total regret
+        matchesExist = false; // reset whether or not matches exist
+        stable = false; // reset whether or not matching is stable
+        compTime = 0; // reset computation time
+        suitorFirst = false; // reset whether to print suitor stats first
     }
 
 }
