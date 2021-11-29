@@ -70,6 +70,12 @@ public class SMPSolver {
     }
 
     public void setParticipants(ArrayList <? extends Participant> S, ArrayList <? extends Participant> R){
+    	for (int i = 0; i < S.size(); i ++) {
+    		this.S.set(i, S.get(i));
+    	}
+    	for (int i = 0; i < R.size(); i ++) {
+    		this.R.set(i, R.get(i));
+    	}
     }
 
     // methods for matching
@@ -268,18 +274,12 @@ public class SMPSolver {
 
     public void printMatches(){ // print matches (school:student matches)
     	if (matchesExist == true) {
-	        if (S.get(0) instanceof School) { //if schools are the suitors
-	        	System.out.print("school optimal whatever"); //use suitorsFirst variable to do this
-	        }
-	        else {
-	        	System.out.print("student optimal whatever"); 
-	        }
-    		
 	    	//if an arbitrary student in the S arrayList does not have a matched school, then display an error message
 			System.out.println("Matches: ");
 			System.out.println("--------");
 		
-	        if (S.get(0) instanceof School) { //if schools are the suitors
+			
+	        if (suitorFirst == true) { //print suitors first (suitors: receiver matches)
 	        	//print suitors first
 				for (int i = 0; i < S.size(); i++) {
 					Participant suitor = S.get(i);
@@ -296,11 +296,8 @@ public class SMPSolver {
 						}
 					}
 				}
-	        	
 	        }
-	        else if (R.get(0) instanceof School) { //if students are the receivers
-	        	//print receivers first
-	        	
+	        else{ //print receivers first (receiver: suitor matches)    	 
 				for (int i = 0; i < R.size(); i++) {
 					Participant receiver = R.get(i);
 					System.out.print(receiver.getName() + ": ");
@@ -341,10 +338,28 @@ public class SMPSolver {
     }
 
     public void printStatsRow(String rowHeading){ // print stats as row
-        System.out.print("rowHeading");
-        //print the rest of the stats in a row
-        
-        //determine the winner and stuff, then print the last row indicating that
+    	String printStable;
+    	String printAvgReceiverRegret = String.valueOf(avgReceiverRegret);
+    	String printAvgSuitorRegret = String.valueOf(avgSuitorRegret);
+    	String printAvgTotalRegret = String.valueOf(avgTotalRegret);
+    	String printCompTime = String.valueOf(compTime);
+    	
+    	if (stable == true) {
+    		printStable = "Yes";
+    	}
+    	else {
+    		printStable = "No";
+    	}
+    	
+    	//check if we should print avg suitor regret first or avg receiver regret first
+    	if (suitorFirst == true) {
+			System.out.format("%-27s%8.2f%8.2f%8.2f  %-27s", printStable, printAvgSuitorRegret, printAvgReceiverRegret, printAvgTotalRegret, printCompTime); //attempt to do spacing
+	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
+    	}
+    	else {
+			System.out.format("%-27s%8.2f%8.2f%8.2f  %-27s", printStable, printAvgReceiverRegret, printAvgSuitorRegret, printAvgTotalRegret, printCompTime); //attempt to do spacing
+	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
+    	}
     }
 
     // reset everything

@@ -342,7 +342,7 @@ public class Pro5_laimic12 {
 		        	    	
 		        	    	if (studentIsValid == true) { //only add student to list if student is valid
 	
-	        	        	    Student student = new Student(name, GPA, ES); //create a new school object with the name and alpha
+	        	        	    Student student = new Student(name, GPA, ES, nSchools); //create a new school object with the name and alpha
 	        	        	    
         	    	    		S.add(student); //add this school to the list of schools
 			        	    	nNewStudents ++;
@@ -628,19 +628,15 @@ public class Pro5_laimic12 {
 		System.out.println("\n");
     }    
     public static void printComparison(SMPSolver GSS, SMPSolver GSH) { //print comparison of student-optimal and school-optimal solutions
-		GSS.setSuitorFirst(true);
-		GSS.printStatsRow("");
-		 
-		GSH.setSuitorFirst(false);
-		GSH.printStatsRow("");
+		GSS.setSuitorFirst(false); //students are suitors in this case
+		GSH.setSuitorFirst(true); //schools are suitors in this case
 		 
 		System.out.print("\n"
 					+ "Solution              Stable    Avg school regret   Avg student regret     Avg total regret       Comp time (ms)\n"
 					+ "----------------------------------------------------------------------------------------------------------------");
 					
 		GSS.printStatsRow("Student optimal");
-		System.out.print("----------------------------------------------------------------------------------------------------------------");
-		GSH.printStatsRow("School optimal");
+		GSH.printStatsRow("School optimal"); 
 		
 		String stableWinner;
 		String avgSchoolRegretWinner;
@@ -726,7 +722,7 @@ public class Pro5_laimic12 {
     		double GPA = P.get(i).getGPA();
     		int ES = P.get(i).getES();
     		int nSchools = P.get(i).getNParticipants();
-    		Student temp = new Student(name, GPA, ES);
+    		Student temp = new Student(name, GPA, ES, nSchools);
     		for (int j = 0; j < nSchools; j ++) {
     			temp.setRanking(j, P.get(i).getRanking(j));
     		}

@@ -31,7 +31,9 @@ public class School extends Participant{
     }
 
     public void print(ArrayList <? extends Participant> S){ // print school row
-
+		//print name, weight, and matches
+		System.out.format("%-27s  %7.2f  %-27s", name, alpha, matchesNames);
+		
     }
 
     public boolean isValid(){ // check if this school has valid info

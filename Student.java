@@ -9,7 +9,7 @@ public class Student extends Participant{
 
     }
 
-    public Student(String name, double GPA, int ES){
+    public Student(String name, double GPA, int ES, int nSchools){
     	super.setName(name);
     }
 
@@ -30,7 +30,7 @@ public class Student extends Participant{
         this.ES = ES;
     }
 
-    public void editInfo (ArrayList <School> H, boolean canEditRankings ){ // user info
+    public void editInfo (ArrayList <School> H, boolean canEditRankings){ // user info
 
     }
 

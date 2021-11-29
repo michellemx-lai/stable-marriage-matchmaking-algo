@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Participant {
     private String name;
@@ -11,7 +12,7 @@ public class Participant {
     public Participant(){
     }
 
-    public Participant(String name, int maxMatches){ 
+    public Participant(String name, int maxMatches, int nParticipants){ 
         this.name = name;
         this.maxMatches = maxMatches;
     }
@@ -39,37 +40,49 @@ public class Participant {
     }
 
     public int getMatch(int i){
+    	int matchIndex = -1;
     	
-        return 0;
+		for (int j = 0; j < this.matches.size(); j++) { //loop through all the matches in the matches ArrayList
+			if (i == matches.get(j)) {
+				matchIndex = j + 1;
+			}
+		}
+		
+		return matchIndex;
     }
 
-    public int getRegret(){ //add up al the regrets in the matchs!!
-        return 0;
+    public int getRegret(){ //add up all the regrets in the matchs!!
+    	return this.regret;
     }
 
     public int getMaxMatches(){
-        return 0;
+        return this.maxMatches;
     }
 
     public int getNMatches(){
-        return 0;
+        return this.matches.size(); // returns length of matches ArrayList?
     }
 
-    public int getNParticipants(){
-        return 0;
+    public int getNParticipants(){ //returns length of rankings ArrayList
+        return this.rankings.size();
     }
 
     public boolean isFull(){
-        return false;
+    	boolean openingsAreFilled = false;
+    	
+    	if (this.maxMatches == matches.size()) {
+    		openingsAreFilled = true;
+    	}
+        return openingsAreFilled;
     }
 
     // setters
     public void setName(String name){
-
+        this.name = name;
     }
 
     public void setRanking(int i, int r){
-
+		this.rankings.set(r - 1, i);
     }
     
     public void setRankings(ArrayList<Integer> rankings){ //I made
@@ -81,67 +94,126 @@ public class Participant {
     }
 
     public void setRegret(int r){
-
+		this.regret = r;
     }
     
-    /*
-    public void setNParticipants(int n){ // set rankings array size
+    public void setNParticipants(int n){ // fill rankings ArrayList with placeholder participant indices
+    	this.rankings.clear();
+    	for (int i = 0; i < n; i ++) {
+    		this.rankings.add(0);
+    	}
     }
-
-*/
+    
     public void setMaxMatches(int n){
-
+        this.maxMatches = n;
     }
 
     // methods to handle matches
     public void clearMatches(){ // clear all matches
-
+        this.matches.clear();
     }
 
     public int findRankingByID(int k){ // find rank of participant k
-        return 0;
+		int ranking = getRanking(k);
+		return ranking;
     }
 
     public int getWorstMatch(){ // find the worst-matched participant
-        return 0;
+    	int worstRankedMatchIndex = this.matches.get(matches.size() - 1);
+
+        return worstRankedMatchIndex;
     }
 
     public void unmatch(int k){ // remove the match with participant k
-
+        this.matches.remove(k);
     }
 
     public boolean matchExists(int k){ // check if match to participant k exists
-        return false;
+        boolean matchExists = false;
+        
+        if (this.matches.contains(k)) {
+        	matchExists = true;
+        }
+        
+    	return matchExists;
     }
 
     public int getSingleMatchedRegret(int k){ // get regret from match with k
-        return 0;
+    	int singleMatchedRegret = -1;
+    	
+		for (int j = 0; j < rankings.size(); j++) {
+			if (k == rankings.get(j)) {
+				singleMatchedRegret = j - 1;
+			}
+		}
+		return singleMatchedRegret;
     }
 
     public void calcRegret(){ // calculate total regret over all matches
+    	int singleMatchedRegret = -1;
 
+		for (int i = 0; i < matches.size(); i++) {
+			singleMatchedRegret = getSingleMatchedRegret(matches.get(i));
+			this.regret += singleMatchedRegret;
+		}
     }
 
     // methods to edit data from the user
     public void editInfo(ArrayList <? extends Participant> P){
-
+        //do something
     }
 
     public void editRankings(ArrayList <? extends Participant> P){
-
+        //do something
     }
 
     // print methods
     public void print(ArrayList <? extends Participant> P){
-
+		if (rankings.size() != 0) {
+			printRankings(P); //print rankings (preferred participant order)
+		}
+		else {
+			System.out.format("%-23s\n", "-");
+		}
     }
 
     public void printRankings(ArrayList <? extends Participant> P){
-
+		for (int i = 0; i < rankings.size(); i++) { //loop over each Student
+			
+			int participantIndex = rankings.get(i);
+			
+			String participantName = P.get(participantIndex - 1).getName();
+			
+			System.out.print(participantName);
+			
+			if (i != rankings.size() - 1) {
+				System.out.print(", "); //print a comma after the participant name unless it's the last participant in the list
+			}
+		}
     }
 
     public String getMatchNames (ArrayList <? extends Participant> P){
-        return null;
+    	String matchNames = "";
+    	
+    	if (matches.size() != 0) { //if the participant has matches
+    		for (int i = 0; i < matches.size(); i ++) {
+				
+				int matchIndex = matches.get(i);
+				String matchName = P.get(matchIndex - 1).getName();
+												
+				matchNames += matchName;
+				
+				if (i != matches.size() - 1) { //print a comma after the match unless it's the last match in the list
+					matchNames += ", ";
+				}
+			}
+		}
+			
+		else {
+			matchNames = "-";
+		}
+    	
+    	return matchNames;
     }
 
     // check if this participant has valid info
