@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Participant {
     private String name;
@@ -168,8 +167,15 @@ public class Participant {
     }
 
     // print methods
-    public void print(ArrayList <? extends Participant> P){
-		if (rankings.size() != 0) {
+    public void print(ArrayList <? extends Participant> P){ //print matching and matches
+		if (matches.size() != 0) {
+			getMatchNames(P); //print matches (assigned participant(s))
+		}
+		else {
+			System.out.format("  %-27s", "-");
+		}
+		
+    	if (rankings.size() != 0) {
 			printRankings(P); //print rankings (preferred participant order)
 		}
 		else {
@@ -195,24 +201,17 @@ public class Participant {
     public String getMatchNames (ArrayList <? extends Participant> P){
     	String matchNames = "";
     	
-    	if (matches.size() != 0) { //if the participant has matches
-    		for (int i = 0; i < matches.size(); i ++) {
-				
-				int matchIndex = matches.get(i);
-				String matchName = P.get(matchIndex - 1).getName();
-												
-				matchNames += matchName;
-				
-				if (i != matches.size() - 1) { //print a comma after the match unless it's the last match in the list
-					matchNames += ", ";
-				}
+		for (int i = 0; i < matches.size(); i ++) {
+			
+			int matchIndex = matches.get(i);
+			String matchName = P.get(matchIndex - 1).getName();
+											
+			matchNames += matchName;
+			
+			if (i != matches.size() - 1) { //print a comma after the match unless it's the last match in the list
+				matchNames += ", ";
 			}
 		}
-			
-		else {
-			matchNames = "-";
-		}
-    	
     	return matchNames;
     }
 

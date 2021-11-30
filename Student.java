@@ -6,11 +6,13 @@ public class Student extends Participant{
 
     // constructors
     public Student(){
-
+        super.setMaxMatches(1); //max matches for student is 1
     }
 
     public Student(String name, double GPA, int ES, int nSchools){
-    	super.setName(name);
+        super(name, 1, nSchools);
+    	this.GPA = GPA;
+    	this.ES = ES;
     }
 
     // getters and setters
@@ -34,8 +36,12 @@ public class Student extends Participant{
 
     }
 
+    @Override
     public void print(ArrayList<? extends Participant> H){ // print student row
-
+		//print name, weight, and assigned Student 
+		System.out.format("%-27s%8.2f%4s", super.getName(), GPA, ES);
+    	
+    	super.print(H); //call super-class to print matches (if they exist) and rankings (if they exist)
     }
 
     public boolean isValid(){ // check if this student has valid info

@@ -364,8 +364,8 @@ public class SMPSolver {
 
     // reset everything
     public void reset(){ //parameters??
-        S = new ArrayList <>(); // reset suitors
-        R = new ArrayList <>(); // reset receivers
+        S = new ArrayList <Participant>(); // reset suitors
+        R = new ArrayList <Participant>(); // reset receivers
         avgSuitorRegret = 0.0; // reset average suitor regret
         avgReceiverRegret = 0.0; // reset average receiver regret
         avgTotalRegret = 0.0; // reset average total regret

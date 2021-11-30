@@ -231,18 +231,18 @@ public class Pro5_laimic12 {
 	        		String[] splitString = line.split(",");	//split up the line at each comma
 	        		String name; //the first element is the name of the school
 	        		Double alpha;
-	        		int nOpenings = 0; 
+	        		int nMaxMatches = 0; 
 	        		
 	        		if (splitString.length == 3) { //make sure the school is valid (has name, alpha, and number of openings)
 		    			nSchoolsInFile ++; //the number of schools increases by 1
 	
 	    				name = splitString[0]; //the first element is the name
 	    				alpha = Double.parseDouble(splitString[1]); //the second element is the GPA weight (alpha) 
-	    				nOpenings = Integer.parseInt(splitString[2]); //the third element is number of openings
+	    				nMaxMatches = Integer.parseInt(splitString[2]); //the third element is number of openings
 		        	    
 	    				//make sure the school is valid 
-	    				if (alpha >= 0.0 && alpha <= 1.0 && nOpenings > 0) { //alpha must be between 0 and 1
-		    				School school = new School(name, alpha, nOpenings); //create a new school object with the name and alpha
+	    				if (alpha >= 0.0 && alpha <= 1.0 && nMaxMatches > 0) { //alpha must be between 0 and 1
+		    				School school = new School(name, alpha, nMaxMatches, 0); //create a new school object with the name and alpha
 			    			H.add(school); //add this school to the list of schools
 			    			nNewSchools ++; //the number of (valid) new schools added increases by 1
 	    				}
@@ -292,6 +292,20 @@ public class Pro5_laimic12 {
 	        }
 	
 	        else {
+	        	
+	        	//first create a temporary list of new students
+	        	//check ifvalid for every student in there
+	        	//add valid ones to the actual S list
+	        	//make sure total S.size() is equal to the number of school openings as well
+	        	/*
+	        	 //get the total max number of school matches (openings)
+		        	int nTotalSchoolOpenings = 0;
+		        	
+		        	for (int i = 0; i < nSchools; i ++) {
+		        		nTotalSchoolOpenings += H.get(i).getMaxMatches();
+		        	}
+	        	 */
+	        	
 		        if (fileName.equals("0") == false) {
 			    	//initialize variables
 			    	String line;
@@ -316,11 +330,11 @@ public class Pro5_laimic12 {
 			        	    int nRankings = splitString.length - 3; //the number of elements is equal to the number of elements in splitString minus 3 (slots taken up by name, GPA, ES)
 		        	        int schoolIndex = 0;
 		        	       
-		        	    	ArrayList <Integer> schoolRankings = new ArrayList <Integer> ();		        	    	
+		        	    	ArrayList <Integer> tempRankings = new ArrayList <Integer> ();		        	    	
 		        	 
 			        	    for (int i = 0; i < nRankings; i++) { //add all the rank
 			        	    	schoolIndex = Integer.parseInt(splitString[3 + i]);
-			        	    	schoolRankings.add(schoolIndex);
+			        	    	tempRankings.add(schoolIndex);
 			        	    }
 			        	    
 			        	    boolean studentIsValid = true; 
@@ -331,7 +345,7 @@ public class Pro5_laimic12 {
 			        	    	if (schoolIndex < 1 || schoolIndex > nSchools) { //school is invalid if it doesn't have an existing corresponding school index
 			        	    		studentIsValid = false;
 			        	    	}
-			        	    	else if (Collections.frequency(schoolRankings, schoolIndex) > 1) { //school is invalid if it is is ranked more than once
+			        	    	else if (Collections.frequency(tempRankings, schoolIndex) > 1) { //school is invalid if it is ranked more than once
 		        	    			studentIsValid = false;
 			        	    	}
 			        	    }
@@ -342,12 +356,12 @@ public class Pro5_laimic12 {
 		        	    	
 		        	    	if (studentIsValid == true) { //only add student to list if student is valid
 	
-	        	        	    Student student = new Student(name, GPA, ES, nSchools); //create a new school object with the name and alpha
+	        	        	    Student student = new Student(name, GPA, ES, nSchools); //create a new student object
 	        	        	    
         	    	    		S.add(student); //add this school to the list of schools
 			        	    	nNewStudents ++;
 
-			    	    		student.setRankings(schoolRankings); //assign the school rankings to the student
+			    	    		student.setRankings(tempRankings); //assign the school rankings to the student
    
 		        	    	} // end of if-statement
 		        	    	
@@ -700,13 +714,13 @@ public class Pro5_laimic12 {
     }
     
     public static ArrayList<School> copySchools(ArrayList<School> P){ //create independent copy of School ArrayList        		
-    	ArrayList<School> newList = new ArrayList<School>();
+     	ArrayList<School> newList = new ArrayList<School>();
     	for (int i = 0; i < P.size(); i ++) {
     		String name = P.get(i).getName();
     		double alpha = P.get(i).getAlpha();
     		int maxMatches = P.get(i).getMaxMatches();
     		int nStudents = P.get(i).getNParticipants();
-    		School temp = new School(name, alpha, maxMatches);
+    		School temp = new School(name, alpha, maxMatches, nStudents);
     		for (int j = 0; j < nStudents; j ++) {
     			temp.setRanking(j, P.get(i).getRanking(j));
     		}
