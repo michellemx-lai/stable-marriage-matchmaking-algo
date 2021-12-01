@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class Pro5_laimic12 {
 	public static void main(String[] args) throws IOException, FileNotFoundException, NumberFormatException {
@@ -59,22 +58,24 @@ public class Pro5_laimic12 {
 		        }
 		        
 				int nNewStudents = loadStudents(S,H);
-				
+								
 				if (nNewStudents != 0) {
 					
 	    			//recalculate school rankings
 					for (int i = 0; i < nSchools; i++) {
 		    			School school = H.get(i);
 		    			school.calcRankings(S);
+		    				    			
+		    			school.setNParticipants(S.size());
 					}
-				}
+				}			    
 				
 				H2 = copySchools(H);
 			    S2 = copyStudents(S);
 			    
     			if (smpSolverStudentSuitors.matchesExist() == true && (nNewSchools != 0 || nNewStudents != 0)) {
     				smpSolverStudentSuitors.reset(); //redundant?
-    				smpSolverSchoolSuitors.reset(); //print suitor stats first because students are the suitors
+    				smpSolverSchoolSuitors.reset(); 
     				
     		    	smpSolverStudentSuitors = new SMPSolver();
     		    	smpSolverSchoolSuitors = new SMPSolver();
@@ -227,6 +228,7 @@ public class Pro5_laimic12 {
 	        do {
 	        	line = fin.readLine();
 	        	if (line != null) {   
+	    			nSchoolsInFile ++; //the number of schools increases by 1
 	        		
 	        		String[] splitString = line.split(",");	//split up the line at each comma
 	        		String name; //the first element is the name of the school
@@ -234,15 +236,15 @@ public class Pro5_laimic12 {
 	        		int nMaxMatches = 0; 
 	        		
 	        		if (splitString.length == 3) { //make sure the school is valid (has name, alpha, and number of openings)
-		    			nSchoolsInFile ++; //the number of schools increases by 1
-	
+	        			
 	    				name = splitString[0]; //the first element is the name
 	    				alpha = Double.parseDouble(splitString[1]); //the second element is the GPA weight (alpha) 
 	    				nMaxMatches = Integer.parseInt(splitString[2]); //the third element is number of openings
 		        	    
+	    				School school = new School(name, alpha, nMaxMatches, 0); //create a new school object with the name and alpha
+	    				
 	    				//make sure the school is valid 
-	    				if (alpha >= 0.0 && alpha <= 1.0 && nMaxMatches > 0) { //alpha must be between 0 and 1
-		    				School school = new School(name, alpha, nMaxMatches, 0); //create a new school object with the name and alpha
+	    				if (school.isValid() == true) { //alpha must be between 0 and 1
 			    			H.add(school); //add this school to the list of schools
 			    			nNewSchools ++; //the number of (valid) new schools added increases by 1
 	    				}
@@ -292,20 +294,6 @@ public class Pro5_laimic12 {
 	        }
 	
 	        else {
-	        	
-	        	//first create a temporary list of new students
-	        	//check ifvalid for every student in there
-	        	//add valid ones to the actual S list
-	        	//make sure total S.size() is equal to the number of school openings as well
-	        	/*
-	        	 //get the total max number of school matches (openings)
-		        	int nTotalSchoolOpenings = 0;
-		        	
-		        	for (int i = 0; i < nSchools; i ++) {
-		        		nTotalSchoolOpenings += H.get(i).getMaxMatches();
-		        	}
-	        	 */
-	        	
 		        if (fileName.equals("0") == false) {
 			    	//initialize variables
 			    	String line;
@@ -329,40 +317,24 @@ public class Pro5_laimic12 {
 			        		ES = Integer.parseInt(splitString[2]); //the second element is the GPA weight (alpha) 
 			        	    int nRankings = splitString.length - 3; //the number of elements is equal to the number of elements in splitString minus 3 (slots taken up by name, GPA, ES)
 		        	        int schoolIndex = 0;
-		        	       
-		        	    	ArrayList <Integer> tempRankings = new ArrayList <Integer> ();		        	    	
-		        	 
-			        	    for (int i = 0; i < nRankings; i++) { //add all the rank
-			        	    	schoolIndex = Integer.parseInt(splitString[3 + i]);
-			        	    	tempRankings.add(schoolIndex);
-			        	    }
 			        	    
-			        	    boolean studentIsValid = true; 
-			        	    
-			        	    for (int i = 0; i < nRankings; i++) { 
-			        	    	schoolIndex = Integer.parseInt(splitString[3 + i]);
-			        	    	
-			        	    	if (schoolIndex < 1 || schoolIndex > nSchools) { //school is invalid if it doesn't have an existing corresponding school index
-			        	    		studentIsValid = false;
-			        	    	}
-			        	    	else if (Collections.frequency(tempRankings, schoolIndex) > 1) { //school is invalid if it is ranked more than once
-		        	    			studentIsValid = false;
-			        	    	}
-			        	    }
-			        	   
-			        	    if (GPA < 0.0 || GPA > 4.0 || ES < 0 || ES > 5 || nRankings != nSchools) { //student is invalid if either GPA or extracurricular score it not between 0.0 and 4.0, and 0 and 5, respectively
-			        	    	studentIsValid = false;
-			        	    }
+			        	    Student student = new Student(name, GPA, ES, nSchools); //create a new student object
 		        	    	
-		        	    	if (studentIsValid == true) { //only add student to list if student is valid
-	
-	        	        	    Student student = new Student(name, GPA, ES, nSchools); //create a new student object
+		        	    	if (splitString.length >= 3) { //student is not valid unless it has rankings
 	        	        	    
-        	    	    		S.add(student); //add this school to the list of schools
-			        	    	nNewStudents ++;
-
+			        	    	ArrayList <Integer> tempRankings = new ArrayList <Integer> ();		        	    	
+					        	 
+				        	    for (int i = 0; i < nRankings; i++) { //add all the rank
+				        	    	schoolIndex = Integer.parseInt(splitString[3 + i]);
+				        	    	tempRankings.add(schoolIndex);
+				        	    }
+				        	    
 			    	    		student.setRankings(tempRankings); //assign the school rankings to the student
-   
+                                
+			    	    		if (student.isValid() == true) {
+			    	    			nNewStudents ++;
+			    	    			S.add(student); //only add the student to the list if the student is valid
+			    	    		}
 		        	    	} // end of if-statement
 		        	    	
 			        	} // end of if-statement
@@ -377,6 +349,7 @@ public class Pro5_laimic12 {
 	        		+ nNewStudents + " of " + nStudentsInFile + " students loaded!\n"
 	        				+ "\n"
 	        				+ "");
+	        
         }
         
     	return nNewStudents; //return the number of new schools
@@ -614,7 +587,7 @@ public class Pro5_laimic12 {
 
     	int nSchools = H.size();
     	
-		System.out.format("%-3s %-27s  %7s  %-27s%-23s\n", " #", "Name", "Weight", "Assigned student", "Preferred student order");
+		System.out.format("%-3s %-27s%8s%4s  %-27s%-22s\n", " #", "Name", "# Spots", "Weight", "Assigned student", "Preferred student order");
 		
 		for (int i = 0; i < 94; i++) {
 			System.out.print("-");
@@ -721,9 +694,7 @@ public class Pro5_laimic12 {
     		int maxMatches = P.get(i).getMaxMatches();
     		int nStudents = P.get(i).getNParticipants();
     		School temp = new School(name, alpha, maxMatches, nStudents);
-    		for (int j = 0; j < nStudents; j ++) {
-    			temp.setRanking(j, P.get(i).getRanking(j));
-    		}
+			temp.setRankings(P.get(i).getRankings());
     		newList.add(temp);
     	}
     	return newList;
@@ -737,9 +708,7 @@ public class Pro5_laimic12 {
     		int ES = P.get(i).getES();
     		int nSchools = P.get(i).getNParticipants();
     		Student temp = new Student(name, GPA, ES, nSchools);
-    		for (int j = 0; j < nSchools; j ++) {
-    			temp.setRanking(j, P.get(i).getRanking(j));
-    		}
+			temp.setRankings(P.get(i).getRankings());
     		newList.add(temp);
     	}
     	return newList;

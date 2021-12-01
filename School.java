@@ -71,12 +71,18 @@ public class School extends Participant{
 
     @Override
     public void print(ArrayList <? extends Participant> S){ // print school row
-		System.out.format("%-27s  %7.2f", super.getName(), alpha); //print name, weight, and assigned student(s)
-    	super.print(S); //call super-class to print matches (if they exist) and rankings (if they exist)
+		System.out.format("%-27s%4s%8.2f", super.getName(), super.getMaxMatches(), alpha); //print name, weight, and assigned student(s)
+		super.print(S); //call super-class to print matches (if they exist) and rankings (if they exist)
     }
 
     public boolean isValid(){ // check if this school has valid info
-        return false;
+        boolean schoolIsValid = false;
+        
+		if ((alpha >= 0.0 && alpha <= 1.0) && super.getMaxMatches() > 0) { //alpha must be between 0 and 1, and the number of openings must be positive
+		    schoolIsValid = true;
+		}
+		
+		return schoolIsValid;
     }
 
 }

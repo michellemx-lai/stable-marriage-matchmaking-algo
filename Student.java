@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Student extends Participant{
     private double GPA = -1.0;
@@ -45,6 +46,21 @@ public class Student extends Participant{
     }
 
     public boolean isValid(){ // check if this student has valid info
-        return false;
+    	boolean studentIsValid = true;
+	    
+	    for (int i = 0; i < super.getRankings().size(); i++) { 
+	    	if (Collections.frequency(super.getRankings(), super.getRankings().get(i)) > 1 || super.getRankings().get(i) > super.getNParticipants()) { //school is invalid if it is ranked more than once
+    			studentIsValid = false;
+	    	}
+	    }
+	   
+	    if (GPA < 0.0 || GPA > 4.0 || ES < 0 || ES > 5 || super.getRankings().size() != super.getNParticipants()) { //student is invalid if either GPA or extracurricular score it not between 0.0 and 4.0, and 0 and 5, respectively
+	    	studentIsValid = false;
+	    }
+
+	    
+	    return studentIsValid;
+	    
+	    //make isValida superclass method, and change the according load students method!
     }
 }

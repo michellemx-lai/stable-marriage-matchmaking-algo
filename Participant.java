@@ -96,11 +96,8 @@ public class Participant {
 		this.regret = r;
     }
     
-    public void setNParticipants(int n){ // fill rankings ArrayList with placeholder participant indices
-    	this.rankings.clear();
-    	for (int i = 0; i < n; i ++) {
-    		this.rankings.add(0);
-    	}
+    public void setNParticipants(int n){ 
+    	//do nothing
     }
     
     public void setMaxMatches(int n){
