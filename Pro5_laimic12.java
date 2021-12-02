@@ -131,7 +131,8 @@ public class Pro5_laimic12 {
 					long startStudentSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverStudentSuitors.match();
 			    	long elapsedTimeStudentSuitors = System.currentTimeMillis() - startStudentSuitors; // Get elapsed time in ms
-
+			    	smpSolverStudentSuitors.calcRegrets();
+			    	
 			    	smpSolverStudentSuitors.printStats(); //print regrets and stability
 					
 			        System.out.print(S.size() + " matches made in " + elapsedTimeStudentSuitors + "ms!\n" //print time elapsed
@@ -143,6 +144,7 @@ public class Pro5_laimic12 {
 					long startSchoolSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverSchoolSuitors.match();
 			    	long elapsedTimeSchoolSuitors = System.currentTimeMillis() - startSchoolSuitors; // Get elapsed time in ms
+			    	smpSolverSchoolSuitors.calcRegrets();
 
 			    	smpSolverSchoolSuitors.printStats(); //print regrets and stability
 					

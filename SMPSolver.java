@@ -234,42 +234,49 @@ public class SMPSolver {
 		        //set regrets once matching is completed
 		    	Participant suitor = S.get(i);
 				int nSuitorMatches = suitor.getMaxMatches();
-	    		ArrayList<Integer> suitorRankings = new ArrayList<Integer>(suitor.getRankings());
+				int suitorRegret = 0;
 				
 				for (int j = 0; j < nSuitorMatches;j++) { //loop through each match in the list of matches
 				
 			        int matchedReceiverIndex = suitor.getMatch(j);
-			        
-			        for (int k = 0; k < suitorRankings.size(); k++) { //loop through the suitor's rankings of receivers
-			        	if (matchedReceiverIndex == suitorRankings.get(k)) { //if we find the matched receiver in the suitor's list of rankings
-			        		int matchedReceiverRank = k + 1;
-			        		suitor.setRegret(matchedReceiverRank); //set the suitor's regrets
-			        		
-			        		totalSuitorRegret += suitor.getRegret(); //add this suitor's regret to the total suitor regret
-			        	}
-			        }
+					System.out.println("the matched receiver's index is" + suitor.getMatch(j)); //TEST
+
+	        		int singleMatchRegret = suitor.getSingleMatchedRegret(matchedReceiverIndex);
+
+	        		suitorRegret += singleMatchRegret; //add this suitor's regret to the total suitor regret	
 				}
+				suitor.setRegret(suitorRegret); //set the suitor's regrets
+				
+				System.out.println("suitor's regret is" + suitor.getRegret()); //TEST
 	        }
-	       
+	        
+	        for (int i = 0; i < nSuitors; i++) { 
+	        	totalSuitorRegret += S.get(i).getRegret();
+		        System.out.println("total suitor regret is" + totalSuitorRegret); //TEST
+
+	        }
+
 	        for (int i = 0; i < nReceivers; i++) { 
 		        //set regrets once matching is completed
 		    	Participant receiver = R.get(i);
 				int nReceiverMatches = receiver.getMaxMatches();
-		        ArrayList<Integer> receiverRankings = new ArrayList<Integer>(receiver.getRankings());
+				int receiverRegret = 0;
 				
 				for (int j = 0; j < nReceiverMatches;j++) { //loop through each match in the list of matches
 				
 			        int matchedSuitorIndex = receiver.getMatch(j);
-			        
-			        for (int k = 0; k < receiverRankings.size(); k++) { //loop through the receiver;s rankings of suitors
-			        	if (matchedSuitorIndex == receiverRankings.get(k)) { //if we find the matched suitor in the receiver;s list of rankings
-			        		int matchedSuitorRank = k + 1;
-			        		receiver.setRegret(matchedSuitorRank); //set the receiver's regrets
-			        		
-			        		totalReceiverRegret += receiver.getRegret(); //add this receiver's regret to the total receiver regret
-			        	}
-			        }
+			        int singleMatchRegret = receiver.getSingleMatchedRegret(matchedSuitorIndex);
+	        		
+			        receiverRegret += singleMatchRegret; //add this receiver's regret to the total receiver regret
 				}
+        		receiver.setRegret(receiverRegret); 
+				System.out.println("receiver's regret is" + receiver.getRegret()); //TEST
+
+	        }
+	        
+	        for (int i = 0; i < nReceivers; i++) { 
+	        	totalReceiverRegret += R.get(i).getRegret();
+		        System.out.println("total receiver regret is" + totalReceiverRegret); //TEST
 	        }
 
 		    //calculate average regrets

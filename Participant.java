@@ -39,6 +39,8 @@ public class Participant {
     }
 
     public int getMatch(int i){
+    	
+    	/*
     	int matchIndex = -1;
     	
 		for (int j = 0; j < this.matches.size(); j++) { //loop through all the matches in the matches ArrayList
@@ -46,6 +48,9 @@ public class Participant {
 				matchIndex = j + 1;
 			}
 		}
+		*/
+    	
+    	int matchIndex = matches.get(i);
 		
 		return matchIndex;
     }
@@ -137,9 +142,10 @@ public class Participant {
     public int getSingleMatchedRegret(int k){ // get regret from match with k
     	int singleMatchedRegret = -1;
     	
-		for (int j = 0; j < rankings.size(); j++) {
-			if (k == rankings.get(j)) {
-				singleMatchedRegret = j - 1;
+		for (int j = 0; j < rankings.size(); j++) { //loop through the participant's rankings
+			if (k == rankings.get(j)) { //find the rank of the match, the rank is the ArrayList index of the match + 1
+				singleMatchedRegret = j; //the regret is rank - 1 therefore the regret is the ArrayList index of the match 
+		        System.out.println("hellar??????");//TEST
 			}
 		}
 		return singleMatchedRegret;
