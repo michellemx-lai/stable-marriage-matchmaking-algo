@@ -121,7 +121,7 @@ public class Participant {
     }
 
     public void unmatch(int k){ // remove the match with participant k
-        this.matches.remove(k);
+        this.matches.remove((Integer)k);
     }
 
     public boolean matchExists(int k){ // check if match to participant k exists

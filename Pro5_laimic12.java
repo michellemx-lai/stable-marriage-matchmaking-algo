@@ -74,18 +74,15 @@ public class Pro5_laimic12 {
 			    S2 = copyStudents(S);
 			    
     			if (smpSolverStudentSuitors.matchesExist() == true && (nNewSchools != 0 || nNewStudents != 0)) {
-    				smpSolverStudentSuitors.reset(); //redundant?
+    				smpSolverStudentSuitors.reset();
     				smpSolverSchoolSuitors.reset(); 
-    				
-    		    	smpSolverStudentSuitors = new SMPSolver();
-    		    	smpSolverSchoolSuitors = new SMPSolver();
-    		    	
-    		    	smpSolverStudentSuitors.setParticipants(S2,H2);
-    		    	smpSolverStudentSuitors.setSuitorFirst(true);
-    		    	
-    		    	smpSolverSchoolSuitors.setParticipants(S2,H2);
-    		    	smpSolverSchoolSuitors.setSuitorFirst(false); //do not print suitor stats first because schools are the suitors
     			}
+
+		    	smpSolverStudentSuitors.setParticipants(S,H);
+		    	smpSolverStudentSuitors.setSuitorFirst(true);
+
+		    	smpSolverSchoolSuitors.setParticipants(H2,S2);
+		    	smpSolverSchoolSuitors.setSuitorFirst(false); //do not print suitor stats first because schools are the suitors
 			}
 	
 			else if (menuInput.equalsIgnoreCase("E")) {
@@ -129,6 +126,7 @@ public class Pro5_laimic12 {
 
 				if (matchingCanProceed == true) {
 					
+					
 					//match with students as suitors
 					long startStudentSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverStudentSuitors.match();
@@ -140,6 +138,7 @@ public class Pro5_laimic12 {
 			        		+ "\n"
 			        		+ "");
 					
+
 			        //match with schools as suitors
 					long startSchoolSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverSchoolSuitors.match();
@@ -150,6 +149,7 @@ public class Pro5_laimic12 {
 			        System.out.print(S.size() + " matches made in " + elapsedTimeSchoolSuitors + "ms!\n" //print time elapsed
 			        		+ "\n"
 			        		+ "");
+
 				}
 			}
 	

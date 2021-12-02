@@ -70,7 +70,15 @@ public class SMPSolver {
     }
 
     public void setParticipants(ArrayList <? extends Participant> S, ArrayList <? extends Participant> R){
-    	for (int i = 0; i < S.size(); i ++) {
+    
+    	for (int i = 0; i < S.size(); i ++) {  //create a dummy arraylist filled with participant objects, of the same size as S
+    		this.S.add(new Participant());
+    	}
+    	for (int i = 0; i < R.size(); i ++) {  //create a dummy arraylist filled with participant objects, of the same size as H
+    		this.R.add(new Participant());
+    	}
+    	
+    	for (int i = 0; i < S.size(); i ++) { 
     		this.S.set(i, S.get(i));
     	}
     	for (int i = 0; i < R.size(); i ++) {
@@ -129,61 +137,72 @@ public class SMPSolver {
     }
 
     public boolean match(){ // Gale-Shapley algorithm to match; students are suitors	
-    	//reset(S,R);
-    	    	
-        //ArrayList<Integer> freeReceivers = new ArrayList<Integer>(S.get(0).getRankings()); //place all the free receivers into an ArrayList
-        ArrayList<Integer> freeSuitors = new ArrayList<Integer>(R.get(0).getRankings()); //place all the free suitors into an ArrayList
-		int proposingSuitorIndex = 0; //initialize
-		
-    	do {
-			proposingSuitorIndex = freeSuitors.get(0); //get the first free suitor from the ArrayList of free suitors
-			//Participant proposingSuitorObj = S.get(proposingSuitorIndex - 1);
-			int nSuitorActiveOpenings = getNSuitorOpenings(); //determine the number of openings this suitor has
-			    		
-	        ArrayList<Integer> freeReceivers = new ArrayList<Integer>(S.get(proposingSuitorIndex - 1).getRankings()); //place all the free suitors into an ArrayList
+    	if (matchesExist == true){
+    		for (int i = 0; i < S.size(); i ++) {
+    			S.get(i).clearMatches();
+    		}
+    		for (int i = 0; i < R.size(); i ++) {
+    			R.get(i).clearMatches();
+    		}
+    		
+    	}
+    	
+    	boolean matchingHappened = true;
+    	
+        ArrayList<Integer> freeSuitors = new ArrayList<Integer>(R.get(0).getRankings()); //place all the free suitors into an ArrayList. Currently all suitors are free
+        
+    
+        
+    	do { //while there are still free suitors left...
+    		int freeSuitorIndex = freeSuitors.get(0); //arbitrarily get the first free suitor in the list
+    		Participant freeSuitorObj = S.get(freeSuitorIndex - 1); //get the suitor object corresponding to the first free suitor in the freeSuitors list
 
-    		//for (int j = 0; j < freeReceivers.size(); j++) { //loop through all the receivers (recall nSuitors = nReceivers) from the most preferred to least preferred
-	        int j = 0; //look at the highest ranked free receiver
-	        do {
-		        int receiverIndex = freeReceivers.get(j);
-        		Participant receiverObj = R.get(receiverIndex - 1); //get the corresponding receiver object
-    			int nReceiverActiveOpenings = getNReceiverOpenings(); //determine the number of openings this receiver has
+    		int i = 0;
+    		do {
+        		//this suitor proposes to their most preferred receiver
+        		int mostPreferredReceiverIndex = freeSuitorObj.getRankings().get(i); 
         		
-    			if (nReceiverActiveOpenings != 0) { //if the receiver is free, then the pair becomes engaged
-    				makeEngagement(proposingSuitorIndex, receiverIndex, 0); //the 0 indicates an old suitor does not exist
-    				nSuitorActiveOpenings --;
-    				nReceiverActiveOpenings --;
-    			} //end of if-statement
-    			else { //otherwise, if the receiver is already engaged, compare the ranks of the proposing suitor and the engaged suitor
-    				int worstSuitorMatchIndex = receiverObj.getWorstMatch();
-    			    int worstSuitorMatchRank = receiverObj.getRanking(worstSuitorMatchIndex); //get ranking of the receiver's worst suitor match
-    				int proposingSuitorRank = receiverObj.getRanking(proposingSuitorIndex); //get receiver's ranking of the proposing suitor 
-    				
-    				if (proposingSuitorRank < worstSuitorMatchRank) { //if the receiver prefers the proposing suitor over the engaged suitor
-    					makeEngagement(proposingSuitorIndex, receiverIndex, worstSuitorMatchIndex); //the pair becomes engaged
-        				freeSuitors.set(0,worstSuitorMatchIndex); //replace the suitor who proposed with the suitor who was abandoned in the free list of suitors
-        				
-        				nSuitorActiveOpenings --;
-    				}
-    			} //end of else statement
-    			
-    			j++;
-	        } while (nSuitorActiveOpenings > 0); //while the proposing suitor is still free
-    		//} //end of for-loop
+	    		makeProposal(freeSuitorIndex, mostPreferredReceiverIndex);
+	    		
+	    		if (freeSuitorObj.isFull() == true) {
+	    			freeSuitors.remove(0);
+	    		}
+	    			    
+	    		i ++;
+    		} while(freeSuitors.contains(freeSuitorIndex) && freeSuitors.size() > 0);
     		
     	} while (freeSuitors.size() > 0);
-
-    	//return value
-    	boolean matchingHappened = true;
+    	    	
     	matchesExist = true;
+    	
     	return matchingHappened;
     }
     
-    /*
     private boolean makeProposal(int suitor, int receiver){ // suitor proposes
-        return false;
+    	boolean proposalAccepted = true;
+    	
+    	Participant receiverObj = R.get(receiver - 1);
+    	
+		if (receiverObj.isFull() == false) { //if the receiver is free, then the pair becomes engaged directly
+			makeEngagement(suitor, receiver, 0); //the 0 is an indicator that there is no old suitor
+
+		} //end of if-statement
+		else { //otherwise, if the receiver is already engaged, compare the ranks of the proposing suitor and the engaged suitor
+			int worstEngagedSuitorIndex = receiverObj.getWorstMatch();
+			int worstEngagedSuitorRank = receiverObj.getRanking(worstEngagedSuitorIndex);
+			int proposingSuitorRank = receiverObj.getRanking(suitor);
+			
+			if (proposingSuitorRank < worstEngagedSuitorRank) { //if the receiver prefers the proposing suitor over the engaged suitor
+				makeEngagement(suitor, receiver, worstEngagedSuitorIndex); //the pair becomes engaged, and the worst engaged suitor will become unmatched 
+			}
+			else {
+				proposalAccepted = false;
+			}
+		} //end of else statement
+		
+		return proposalAccepted;
     }
-    */
+    
 
     private void makeEngagement(int suitor, int receiver, int oldSuitor){ // make suitor-receiver engagement, break receiver-oldSuitor engagement
 		//note: the old suitor is the worst match, if oldSuitor is 0 that means the receiver still has openings left (no need to break receiver-oldSuitor engagement
@@ -191,7 +210,7 @@ public class SMPSolver {
 		Participant suitorObj = S.get(suitor - 1); //get the corresponding suitor object using index
 
     	if (oldSuitor != 0) { //if all the openings are full, unmatch the worst ranked suitor with the new suitor (carry out unmatching)
-        	Participant oldSuitorObj = S.get(oldSuitor - 1); //get the corresponding old suitor object using  index
+        	Participant oldSuitorObj = S.get(oldSuitor - 1); //get the corresponding old suitor object using index
             receiverObj.unmatch(oldSuitor); // remove the receiver's match with old suitor 
             oldSuitorObj.unmatch(receiver); // remove the old suitor's match with receiver
     	}
@@ -372,7 +391,6 @@ public class SMPSolver {
         matchesExist = false; // reset whether or not matches exist
         stable = false; // reset whether or not matching is stable
         compTime = 0; // reset computation time
-        suitorFirst = false; // reset whether to print suitor stats first
     }
 
 }
