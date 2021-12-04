@@ -589,7 +589,7 @@ public class Pro5_laimic12 {
 
     	int nSchools = H.size();
     	
-		System.out.format("%-3s %-27s%8s%4s  %-27s%-22s\n", " #", "Name", "# Spots", "Weight", "Assigned student", "Preferred student order");
+		System.out.format("%-3s %-27s%8s%4s  %-27s%-22s\n", " #", "Name", "# spots", "Weight", "Assigned student", "Preferred student order");
 		
 		for (int i = 0; i < 94; i++) {
 			System.out.print("-");

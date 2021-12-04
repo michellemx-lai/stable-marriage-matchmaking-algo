@@ -145,7 +145,6 @@ public class Participant {
 		for (int j = 0; j < rankings.size(); j++) { //loop through the participant's rankings
 			if (k == rankings.get(j)) { //find the rank of the match, the rank is the ArrayList index of the match + 1
 				singleMatchedRegret = j; //the regret is rank - 1 therefore the regret is the ArrayList index of the match 
-		        System.out.println("hellar??????");//TEST
 			}
 		}
 		return singleMatchedRegret;
@@ -172,7 +171,8 @@ public class Participant {
     // print methods
     public void print(ArrayList <? extends Participant> P){ //print matching and matches
 		if (matches.size() != 0) {
-			getMatchNames(P); //print matches (assigned participant(s))
+			String matchNames = getMatchNames(P); //print matches (assigned participant(s))
+			System.out.format("  %-27s", matchNames);
 		}
 		else {
 			System.out.format("  %-27s", "-");

@@ -151,25 +151,33 @@ public class SMPSolver {
     	
         ArrayList<Integer> freeSuitors = new ArrayList<Integer>(R.get(0).getRankings()); //place all the free suitors into an ArrayList. Currently all suitors are free
         
-    
-        
     	do { //while there are still free suitors left...
     		int freeSuitorIndex = freeSuitors.get(0); //arbitrarily get the first free suitor in the list
     		Participant freeSuitorObj = S.get(freeSuitorIndex - 1); //get the suitor object corresponding to the first free suitor in the freeSuitors list
-
+    	
+    		boolean proposalAccepted = false;
     		int i = 0;
-    		do {
+    		do { //while the suitor is not full, the suitor's proposal is rejected, and there are still free suitors...
         		//this suitor proposes to their most preferred receiver
         		int mostPreferredReceiverIndex = freeSuitorObj.getRankings().get(i); 
         		
-	    		makeProposal(freeSuitorIndex, mostPreferredReceiverIndex);
-	    		
+        		proposalAccepted = makeProposal(freeSuitorIndex, mostPreferredReceiverIndex); //call the makeProposal method, an engagement is made if possible
+        		
 	    		if (freeSuitorObj.isFull() == true) {
 	    			freeSuitors.remove(0);
 	    		}
-	    			    
+	    		
+	    		//check to see if a suitor was freed during the engagement process (if there is, add them back into the free suitors ArrayList)
+    			for (int j = 0; j < R.get(0).getRankings().size(); j++) { //for every suitor 
+    				int suitorIndex = R.get(0).getRankings().get(j); //get their suitor index
+    			    Participant suitorObj = S.get(suitorIndex - 1); //get their corresponding suitor object
+    			    if (suitorObj.isFull() == false && freeSuitors.contains(suitorIndex) == false) { //if a free suitor is not found in the free suitors ArrayList, add it into the ArrayList!
+    			    	freeSuitors.add(suitorIndex);
+    			    }
+    			}
+	    		    
 	    		i ++;
-    		} while(freeSuitors.contains(freeSuitorIndex) && freeSuitors.size() > 0);
+    		} while(freeSuitors.contains(freeSuitorIndex) && proposalAccepted == false && freeSuitors.size() > 0);
     		
     	} while (freeSuitors.size() > 0);
     	    	
@@ -228,6 +236,7 @@ public class SMPSolver {
 		int nReceivers = R.size();
 				
 		if (matchesExist == true) {
+
 			
 	        //set regrets
 	        for (int i = 0; i < nSuitors; i++) { 
@@ -235,25 +244,19 @@ public class SMPSolver {
 		    	Participant suitor = S.get(i);
 				int nSuitorMatches = suitor.getMaxMatches();
 				int suitorRegret = 0;
-				
-				for (int j = 0; j < nSuitorMatches;j++) { //loop through each match in the list of matches
+								
+				for (int j = 0; j < nSuitorMatches; j++) { //loop through each match in the list of matches
 				
 			        int matchedReceiverIndex = suitor.getMatch(j);
-					System.out.println("the matched receiver's index is" + suitor.getMatch(j)); //TEST
-
 	        		int singleMatchRegret = suitor.getSingleMatchedRegret(matchedReceiverIndex);
 
 	        		suitorRegret += singleMatchRegret; //add this suitor's regret to the total suitor regret	
 				}
 				suitor.setRegret(suitorRegret); //set the suitor's regrets
-				
-				System.out.println("suitor's regret is" + suitor.getRegret()); //TEST
 	        }
 	        
 	        for (int i = 0; i < nSuitors; i++) { 
 	        	totalSuitorRegret += S.get(i).getRegret();
-		        System.out.println("total suitor regret is" + totalSuitorRegret); //TEST
-
 	        }
 
 	        for (int i = 0; i < nReceivers; i++) { 
@@ -262,7 +265,7 @@ public class SMPSolver {
 				int nReceiverMatches = receiver.getMaxMatches();
 				int receiverRegret = 0;
 				
-				for (int j = 0; j < nReceiverMatches;j++) { //loop through each match in the list of matches
+				for (int j = 0; j < nReceiverMatches; j++) { //loop through each match in the list of matches
 				
 			        int matchedSuitorIndex = receiver.getMatch(j);
 			        int singleMatchRegret = receiver.getSingleMatchedRegret(matchedSuitorIndex);
@@ -270,19 +273,16 @@ public class SMPSolver {
 			        receiverRegret += singleMatchRegret; //add this receiver's regret to the total receiver regret
 				}
         		receiver.setRegret(receiverRegret); 
-				System.out.println("receiver's regret is" + receiver.getRegret()); //TEST
-
 	        }
 	        
 	        for (int i = 0; i < nReceivers; i++) { 
 	        	totalReceiverRegret += R.get(i).getRegret();
-		        System.out.println("total receiver regret is" + totalReceiverRegret); //TEST
 	        }
 
 		    //calculate average regrets
 			avgSuitorRegret = Double.valueOf(totalSuitorRegret)/ Double.valueOf(nSuitors);	    
 			avgReceiverRegret = Double.valueOf(totalReceiverRegret) / Double.valueOf(nReceivers);
-			avgTotalRegret = (avgSuitorRegret + avgReceiverRegret) / 2.00;
+			avgTotalRegret = (Double.valueOf(totalSuitorRegret) + Double.valueOf(totalReceiverRegret)) / (nSuitors + nReceivers);
         }	
     }
 
@@ -305,8 +305,25 @@ public class SMPSolver {
 			System.out.println("--------");
 		
 			
-	        if (suitorFirst == true) { //print suitors first (suitors: receiver matches)
-	        	//print suitors first
+	        if (suitorFirst == true) { //print receivers first (receiver: suitor matches)
+				for (int i = 0; i < R.size(); i++) {
+					Participant receiver = R.get(i);
+					System.out.print(receiver.getName() + ": ");
+					
+					for (int j = 0; j < getNReceiverOpenings(); j++) { //loop over each matched student in the school's matches ArrayList
+						int matchedSuitorIndex = receiver.getMatch(j); //get the index of the matched student
+						Participant matchedSuitor = S.get(matchedSuitorIndex - 1); //get the corresponding student object using the index
+						
+						//print the list of student matches
+						System.out.print(matchedSuitor.getName()); //print the student's name
+						if (i != getNReceiverOpenings() - 1) { //print a comma after the student unless it's the last student
+							System.out.print(", ");
+						}
+					}
+				}	
+	        }
+	        else{ //print suitors first (suitor: receiver matches)    	 
+	         	//print suitors first
 				for (int i = 0; i < S.size(); i++) {
 					Participant suitor = S.get(i);
 					System.out.print(suitor.getName() + ": ");
@@ -322,23 +339,6 @@ public class SMPSolver {
 						}
 					}
 				}
-	        }
-	        else{ //print receivers first (receiver: suitor matches)    	 
-				for (int i = 0; i < R.size(); i++) {
-					Participant receiver = R.get(i);
-					System.out.print(receiver.getName() + ": ");
-					
-					for (int j = 0; j < getNReceiverOpenings(); j++) { //loop over each matched student in the school's matches ArrayList
-						int matchedSuitorIndex = receiver.getMatch(j); //get the index of the matched student
-						Participant matchedSuitor = S.get(matchedSuitorIndex - 1); //get the corresponding student object using the index
-						
-						//print the list of student matches
-						System.out.print(matchedSuitor.getName()); //print the student's name
-						if (i != getNReceiverOpenings() - 1) { //print a comma after the student unless it's the last student
-							System.out.print(", ");
-						}
-					}
-				}		
 	        }
     	}
     }
