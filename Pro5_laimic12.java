@@ -141,6 +141,11 @@ public class Pro5_laimic12 {
 			        smpSolverStudentSuitors.match();
 			    	smpSolverStudentSuitors.calcRegrets();
 			    	
+			    	//print header
+			    	System.out.print("STUDENT-OPTIMAL MATCHING\n"
+			    			+ "\n"
+			    			+ "");
+			    	
 			    	smpSolverStudentSuitors.printStats(); //print regrets and stability
 					
 			        System.out.print(S.size() + " matches made in " + smpSolverStudentSuitors.getTime() + "ms!\n" //print time elapsed
@@ -150,6 +155,11 @@ public class Pro5_laimic12 {
 			        //match with schools as suitors
 			        smpSolverSchoolSuitors.match();
 			    	smpSolverSchoolSuitors.calcRegrets();
+			    	
+			    	//print header
+			    	System.out.print("SCHOOL-OPTIMAL MATCHING\n"
+			    			+ "\n"
+			    			+ "");
 
 			    	smpSolverSchoolSuitors.printStats(); //print regrets and stability
 					

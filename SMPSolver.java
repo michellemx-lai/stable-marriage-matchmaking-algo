@@ -104,6 +104,7 @@ public class SMPSolver {
         matchesExist = false; // reset whether or not matches exist
         stable = true; // reset whether or not matching is stable
         compTime = 0; // reset computation time
+
     }
 
     public boolean matchingCanProceed(){ // check that matching rules are satisfied
@@ -134,7 +135,10 @@ public class SMPSolver {
     			nTotalReceiverOpenings += receiver.getMaxMatches(); //add the number of openings of this receiver to the total number of receiver openings
     		}
     		if (nTotalReceiverOpenings != nTotalSuitorOpenings) { //if the suitor and receiver openings are not equal, print an error message
-        		System.out.print("**error openings must be equal**");
+        		System.out.print("\r\n"
+        				+ "ERROR: The number of suitor and receiver openings must be equal!\r\n"
+        				+ "\r\n"
+        				+ "");
         		matchingCanProceed = false;
     		}
     	}
@@ -158,7 +162,8 @@ public class SMPSolver {
     	boolean matchingHappened = true;
     	
         ArrayList<Integer> freeSuitors = new ArrayList<Integer>(R.get(0).getRankings()); //place all the free suitors into an ArrayList. Currently all suitors are free
-        
+        //ArrayList<Integer> freeReceivers = new ArrayList<Integer>(S.get(0).getRankings()); //place all the free receivers into an ArrayList. Currently all receivers are free
+
     	do { //while there are still free suitors left...
     		int freeSuitorIndex = freeSuitors.get(0); //arbitrarily get the first free suitor in the list
     		Participant freeSuitorObj = S.get(freeSuitorIndex - 1); //get the suitor object corresponding to the first free suitor in the freeSuitors list
@@ -166,7 +171,7 @@ public class SMPSolver {
     		boolean proposalAccepted = false;
     		int i = 0;
     		do { //while the suitor is not full, the suitor's proposal is rejected, and there are still free suitors...
-        		//this suitor proposes to their most preferred receiver
+        		//this suitor proposes to their most preferred free receiver 
         		int mostPreferredReceiverIndex = freeSuitorObj.getRankings().get(i); 
         		
         		proposalAccepted = makeProposal(freeSuitorIndex, mostPreferredReceiverIndex); //call the makeProposal method, an engagement is made if possible
@@ -186,7 +191,7 @@ public class SMPSolver {
 	    		    
 	    		i ++;
     		} while(freeSuitors.contains(freeSuitorIndex) && proposalAccepted == false && freeSuitors.size() > 0);
-    		
+    		    		
     	} while (freeSuitors.size() > 0);
     	    	
     	matchesExist = true;

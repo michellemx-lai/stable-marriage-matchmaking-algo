@@ -110,7 +110,18 @@ public class Participant {
     }
 
     public int getWorstMatch(){ // find the worst-matched participant
-    	int worstRankedMatchIndex = this.matches.get(matches.size() - 1);
+    	int worstRankedMatchRank = 0; //initialize 
+    	int worstRankedMatchIndex = rankings.size() + 900; //initialize
+    	
+    	for (int i = 0; i < matches.size(); i ++) { //loop over each match 
+    		int matchIndex = matches.get(i); //get the match index
+    		int matchRank = getRanking(matchIndex); //get the corresponding rank of the match
+    		
+    		if (matchRank > worstRankedMatchRank) { //if this match is lesser preferred than the current least preferred match
+    			worstRankedMatchIndex = matchIndex; //then it becomes the worst match
+    			worstRankedMatchRank = matchRank; //assign its corresponding rank to be the worst rank
+    		}
+    	}
 
         return worstRankedMatchIndex;
     }
