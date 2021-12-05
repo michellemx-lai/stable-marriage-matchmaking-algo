@@ -128,27 +128,22 @@ public class Pro5_laimic12 {
 					
 					
 					//match with students as suitors
-					long startStudentSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverStudentSuitors.match();
-			    	long elapsedTimeStudentSuitors = System.currentTimeMillis() - startStudentSuitors; // Get elapsed time in ms
 			    	smpSolverStudentSuitors.calcRegrets();
 			    	
 			    	smpSolverStudentSuitors.printStats(); //print regrets and stability
 					
-			        System.out.print(S.size() + " matches made in " + elapsedTimeStudentSuitors + "ms!\n" //print time elapsed
+			        System.out.print(S.size() + " matches made in " + smpSolverStudentSuitors.getTime() + "ms!\n" //print time elapsed
 			        		+ "\n"
 			        		+ "");
 					
-
 			        //match with schools as suitors
-					long startSchoolSuitors = System.currentTimeMillis(); //Get current time
 			        smpSolverSchoolSuitors.match();
-			    	long elapsedTimeSchoolSuitors = System.currentTimeMillis() - startSchoolSuitors; // Get elapsed time in ms
 			    	smpSolverSchoolSuitors.calcRegrets();
 
 			    	smpSolverSchoolSuitors.printStats(); //print regrets and stability
 					
-			        System.out.print(S.size() + " matches made in " + elapsedTimeSchoolSuitors + "ms!\n" //print time elapsed
+			        System.out.print(S.size() + " matches made in " + smpSolverSchoolSuitors.getTime()  + "ms!\n" //print time elapsed
 			        		+ "\n"
 			        		+ "");
 
@@ -199,13 +194,14 @@ public class Pro5_laimic12 {
 	
 	//display the main menu...and get user input for menu option
     public static void displayMenu() throws IOException, NumberFormatException {
-		System.out.println("JAVA STABLE MARRIAGE PROBLEM v2\n"
+		System.out.println("JAVA STABLE MARRIAGE PROBLEM v3\n"
 				+ "\n"
 				+ "L - Load students and schools from file\n"
 				+ "E - Edit students and schools\n"
 				+ "P - Print students and schools\n"
 				+ "M - Match students and schools using Gale-Shapley algorithm\n"
-				+ "D - Display matches and statistics\n"
+				+ "D - Display matches\n"
+				+ "X - Compare student-optimal and school-optimal matches\n"
 				+ "R - Reset database\n"
 				+ "Q - Quit\n"
 				+ "\n"
@@ -620,72 +616,72 @@ public class Pro5_laimic12 {
 		GSS.setSuitorFirst(false); //students are suitors in this case
 		GSH.setSuitorFirst(true); //schools are suitors in this case
 		 
-		System.out.print("\n"
+		System.out.println("\n"
 					+ "Solution              Stable    Avg school regret   Avg student regret     Avg total regret       Comp time (ms)\n"
 					+ "----------------------------------------------------------------------------------------------------------------");
 					
 		GSS.printStatsRow("Student optimal");
 		GSH.printStatsRow("School optimal"); 
 		
-		String stableWinner;
-		String avgSchoolRegretWinner;
-		String avgStudentRegretWinner;
-		String avgTotalRegretWinner;
-		String compTimeWinner;
+		String stableWinner = "";
+		String avgSchoolRegretWinner = "";
+		String avgStudentRegretWinner = "";
+		String avgTotalRegretWinner = "";
+		String compTimeWinner = "";
 		
 		if (GSS.isStable() == true && GSH.isStable() == false) {
-			stableWinner = "Student-opt";
+			stableWinner += "Student-opt";
 		}
 		else if (GSS.isStable() == false && GSH.isStable() == true) {
-			stableWinner = "School-opt";
+			stableWinner += "School-opt";
 		}
 		else {
-			stableWinner = "Tie";
+			stableWinner += "Tie";
 		}
 		
-		if (GSS.getAvgReceiverRegret() > GSH.getAvgReceiverRegret()) {
-			avgSchoolRegretWinner = "School-opt";
+		if (GSS.getAvgReceiverRegret() > GSH.getAvgSuitorRegret()) {
+			avgSchoolRegretWinner += "School-opt";
 		}
-		else if (GSS.getAvgReceiverRegret() < GSH.getAvgReceiverRegret()) {
-			avgSchoolRegretWinner = "Student-opt";
+		else if (GSS.getAvgReceiverRegret() < GSH.getAvgSuitorRegret()) {
+			avgSchoolRegretWinner += "Student-opt";
 		}
 		else {
-			avgSchoolRegretWinner = "Tie";
+			avgSchoolRegretWinner += "Tie";
 		}
 		
-		if (GSS.getAvgSuitorRegret() > GSH.getAvgSuitorRegret()) {
-			avgStudentRegretWinner = "School-opt";
+		if (GSS.getAvgSuitorRegret() > GSH.getAvgReceiverRegret()) {
+			avgStudentRegretWinner += "School-opt";
 		}
-		else if (GSS.getAvgSuitorRegret() < GSH.getAvgSuitorRegret()) {
-			avgStudentRegretWinner = "Student-opt";
+		else if (GSS.getAvgSuitorRegret() < GSH.getAvgReceiverRegret()) {
+			avgStudentRegretWinner += "Student-opt";
 		}
 		else {
-			avgStudentRegretWinner = "Tie";
+			avgStudentRegretWinner += "Tie";
 		}
 		
 		if (GSS.getAvgTotalRegret() > GSH.getAvgTotalRegret()) {
-			avgTotalRegretWinner = "School-opt";
+			avgTotalRegretWinner += "School-opt";
 		}
 		else if (GSS.getAvgTotalRegret() < GSH.getAvgTotalRegret()) {
-			avgTotalRegretWinner = "Student-opt";
+			avgTotalRegretWinner += "Student-opt";
 		}
 		else {
-			avgTotalRegretWinner = "Tie";
+			avgTotalRegretWinner += "Tie";
 		}
 		
 		if (GSS.getTime() > GSH.getTime()) {
-			compTimeWinner = "School-opt";
+			compTimeWinner += "School-opt";
 		}
 		else if (GSS.getTime() < GSH.getTime()) {
-			compTimeWinner = "Student-opt";
+			compTimeWinner += "Student-opt";
 		}
 		else {
-			compTimeWinner = "Tie";
+			compTimeWinner += "Tie";
 		}
 		
 		System.out.print("----------------------------------------------------------------------------------------------------------------\n"
 		+ "WINNER                   " + stableWinner + "                  " + avgSchoolRegretWinner + "                  " + avgStudentRegretWinner + "                  " + avgTotalRegretWinner + "           " + compTimeWinner + "\n"
-		+ "----------------------------------------------------------------------------------------------------------------");
+		+ "----------------------------------------------------------------------------------------------------------------\n");
     }
     
     public static ArrayList<School> copySchools(ArrayList<School> P){ //create independent copy of School ArrayList        		

@@ -7,7 +7,7 @@ public class SMPSolver {
     private double avgReceiverRegret = 0.0; // average receiver regret
     private double avgTotalRegret = 0.0; // average total regret
     private boolean matchesExist = false; // whether or not matches exist
-    private boolean stable = false; // whether or not matching is stable
+    private boolean stable = true; // whether or not matching is stable
     private long compTime = 0; // computation time
     private boolean suitorFirst = false; // whether to print suitor stats first
 
@@ -137,6 +137,8 @@ public class SMPSolver {
     }
 
     public boolean match(){ // Gale-Shapley algorithm to match; students are suitors	
+		long startTime = System.currentTimeMillis(); //Get current time
+
     	if (matchesExist == true){
     		for (int i = 0; i < S.size(); i ++) {
     			S.get(i).clearMatches();
@@ -183,6 +185,8 @@ public class SMPSolver {
     	    	
     	matchesExist = true;
     	
+    	compTime = System.currentTimeMillis() - startTime; // Get elapsed time in ms
+
     	return matchingHappened;
     }
     
@@ -287,7 +291,41 @@ public class SMPSolver {
     }
 
     public boolean determineStability(){ // calculate if a matching is stable
-        return true;
+    	calcRegrets();
+    	
+    	boolean stable = true;
+    	int nReceivers = R.size();
+    	
+    	//loop through each receiver 
+		for (int i = 0; i < nReceivers; i++) { 
+			int receiverIndex = i + 1;
+			Participant receiverObj = R.get(i); //create the corresponding receiver object
+			
+			//get the index and rank of the receiver's current worst match
+			int worstMatchedSuitorIndex = receiverObj.getWorstMatch(); //get the index of the worst matched suitor
+			int worstMatchedSuitorRank = receiverObj.getRanking(worstMatchedSuitorIndex); //get the corresponding rank of the worst matched suitor
+	
+			//get the index and rank of each of the receiver's preferred match(es)
+			//every suitor that have the smaller rank than the worstMatchedSuitorRank is more preferred by the receiver
+			
+			for (int j = 0; j < worstMatchedSuitorRank - 1; j++) {
+				int preferredSuitorIndex = receiverObj.getRankings().get(j); //get the index of the preferred student
+				Participant preferredSuitor = S.get(preferredSuitorIndex - 1); //create the student object
+				
+				//get the index and rank of the preferred suitor's worst matched receiver
+				int preferredSuitorWorstMatchedReceiverIndex = preferredSuitor.getWorstMatch(); 
+				int preferredSuitorWorstMatchedReceiverRank = preferredSuitor.getRanking(preferredSuitorWorstMatchedReceiverIndex); //get the rank of the preferred suitor's worst matched receiver
+				    
+			    //loop through receivers that the preferred suitor prefers more than its worst matched receiver
+				 for (int k = 0; k < preferredSuitorWorstMatchedReceiverRank - 1; k++) { 
+					 int preferredReceiverIndex = preferredSuitor.getRankings().get(k); //get the index of the preferred school
+					 if (receiverIndex == preferredReceiverIndex) { //if the preferred student of the school also prefers this school more than their match
+		    		 stable = false; //then the match is unstable
+					 } // end of if-statement
+				 } //end of for-loop
+			} //end of for-loop
+		} //end of for-loop
+		return stable;
     }
 
     // print methods
@@ -310,14 +348,16 @@ public class SMPSolver {
 					Participant receiver = R.get(i);
 					System.out.print(receiver.getName() + ": ");
 					
-					for (int j = 0; j < getNReceiverOpenings(); j++) { //loop over each matched student in the school's matches ArrayList
-						int matchedSuitorIndex = receiver.getMatch(j); //get the index of the matched student
-						Participant matchedSuitor = S.get(matchedSuitorIndex - 1); //get the corresponding student object using the index
+					for (int j = 0; j < receiver.getMaxMatches(); j++) { //loop over each matched suitor in the receiver's matches 
+						int matchedSuitorIndex = receiver.getMatch(j); //get the index of the matched suitor
+						Participant matchedSuitor = S.get(matchedSuitorIndex - 1); //get the corresponding suitor object using the index
 						
 						//print the list of student matches
-						System.out.print(matchedSuitor.getName()); //print the student's name
-						if (i != getNReceiverOpenings() - 1) { //print a comma after the student unless it's the last student
-							System.out.print(", ");
+						if (j != receiver.getMaxMatches() - 1) { //print a comma after the suitor unless it's the last student
+							System.out.print(matchedSuitor.getName() + ", ");
+						}
+						else {
+							System.out.println(matchedSuitor.getName()); //just print the suitor's name
 						}
 					}
 				}	
@@ -328,14 +368,16 @@ public class SMPSolver {
 					Participant suitor = S.get(i);
 					System.out.print(suitor.getName() + ": ");
 					
-					for (int j = 0; j < getNSuitorOpenings(); j++) { //loop over each matched student in the school's matches ArrayList
-						int matchedReceiverIndex = suitor.getMatch(j); //get the index of the matched student
-						Participant matchedReceiver = S.get(matchedReceiverIndex- 1); //get the corresponding student object using the index
+					for (int j = 0; j < suitor.getMaxMatches(); j++) { //loop over each matched receiver in the suitor's matches 
+						int matchedReceiverIndex = suitor.getMatch(j); //get the index of the matched receiver
+						Participant matchedReceiver = R.get(matchedReceiverIndex- 1); //get the corresponding receiver object using the index
 						
-						//print the list of student matches
-						System.out.print(matchedReceiver.getName()); //print the student's name
-						if (i != getNSuitorOpenings() - 1) { //print a comma after the student unless it's the last student
-							System.out.print(", ");
+						//print the list of suitor matches
+						if (j != suitor.getMaxMatches() - 1) { //print a comma after the receiver unless it's the last student
+							System.out.print(matchedReceiver.getName() + ", ");
+						}
+						else {
+							System.out.println(matchedReceiver.getName()); //just print the receiver's name
 						}
 					}
 				}
@@ -345,10 +387,10 @@ public class SMPSolver {
 
     public void printStats(){  // print matching statistics
     	if (matchesExist == true) {
-	    	boolean matchingIsStable = isStable();
+	    	stable = determineStability();
 	    	
 		    //print whether the matching is stable or unstable
-			if (matchingIsStable == true) {
+			if (stable == true) {
 				System.out.println("Stable matching? Yes");
 			}
 			else {
@@ -364,26 +406,29 @@ public class SMPSolver {
     }
 
     public void printStatsRow(String rowHeading){ // print stats as row
-    	String printStable;
+    	String printStable = "";
+    	
+    	/*
     	String printAvgReceiverRegret = String.valueOf(avgReceiverRegret);
     	String printAvgSuitorRegret = String.valueOf(avgSuitorRegret);
     	String printAvgTotalRegret = String.valueOf(avgTotalRegret);
     	String printCompTime = String.valueOf(compTime);
+    	*/
     	
     	if (stable == true) {
-    		printStable = "Yes";
+    		printStable += "Yes";
     	}
     	else {
-    		printStable = "No";
+    		printStable += "No";
     	}
     	
     	//check if we should print avg suitor regret first or avg receiver regret first
     	if (suitorFirst == true) {
-			System.out.format("%-27s%8.2f%8.2f%8.2f  %-27s", printStable, printAvgSuitorRegret, printAvgReceiverRegret, printAvgTotalRegret, printCompTime); //attempt to do spacing
+			System.out.format("%-27s%4s%8.2f%16.2f%16.2f  %-27s\n", rowHeading, printStable, avgSuitorRegret, avgReceiverRegret, avgTotalRegret, compTime); //attempt to do spacing
 	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
     	}
     	else {
-			System.out.format("%-27s%8.2f%8.2f%8.2f  %-27s", printStable, printAvgReceiverRegret, printAvgSuitorRegret, printAvgTotalRegret, printCompTime); //attempt to do spacing
+			System.out.format("%-27s%4s%8.2f%16.2f%16.2f  %-27s\n", rowHeading, printStable, avgReceiverRegret, avgSuitorRegret, avgTotalRegret, compTime); //attempt to do spacing
 	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
     	}
     }
@@ -396,7 +441,7 @@ public class SMPSolver {
         avgReceiverRegret = 0.0; // reset average receiver regret
         avgTotalRegret = 0.0; // reset average total regret
         matchesExist = false; // reset whether or not matches exist
-        stable = false; // reset whether or not matching is stable
+        stable = true; // reset whether or not matching is stable
         compTime = 0; // reset computation time
     }
 
