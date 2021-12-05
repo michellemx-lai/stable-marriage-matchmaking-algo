@@ -86,12 +86,17 @@ public class Pro5_laimic12 {
 			}
 	
 			else if (menuInput.equalsIgnoreCase("E")) {
-				/*
-				editData(S2,H2);
+				
+				editData(S,H);
 
-				smpSolverStudentSuitors.reset(S2,H2); 
-				smpSolverSchoolSuitors.reset(S2,H2); 
-				*/
+				H2 = copySchools(H);
+			    S2 = copyStudents(S);
+
+		    	smpSolverStudentSuitors.setParticipants(S,H);
+		    	smpSolverStudentSuitors.setSuitorFirst(true);
+
+		    	smpSolverSchoolSuitors.setParticipants(H2,S2);
+		    	smpSolverSchoolSuitors.setSuitorFirst(false); 
 			}
 	
 			else if (menuInput.equalsIgnoreCase("P")) {
@@ -121,6 +126,11 @@ public class Pro5_laimic12 {
 			}
 	
 			else if (menuInput.equalsIgnoreCase("M")) {
+				
+				if (smpSolverStudentSuitors.matchesExist() == true || smpSolverSchoolSuitors.matchesExist() == true) {
+					smpSolverStudentSuitors.clearMatches();
+					smpSolverSchoolSuitors.clearMatches();
+				}
 				
 				boolean matchingCanProceed = smpSolverStudentSuitors.matchingCanProceed();
 
@@ -184,8 +194,8 @@ public class Pro5_laimic12 {
 			}
 	
 			else if (menuInput.equalsIgnoreCase("Q")) {
-	            System.out.print(" \n"
-	            		+ "Arrivederci!\n"
+	            System.out.print("\n"
+	            		+ "Hasta luego!\n"
 	            		+ "");
 				System.exit(0);
 			}
@@ -353,7 +363,7 @@ public class Pro5_laimic12 {
     	return nNewStudents; //return the number of new schools
     }
     
-    /*
+    
     //display sub-menu to edit students and schools
     public static void editData(ArrayList<Student> S, ArrayList<School> H) throws IOException, NumberFormatException {
 		int nStudents = S.size();
@@ -423,10 +433,8 @@ public class Pro5_laimic12 {
 			displayMenu();
 		}
     }
-    */
     
-    /*
-
+    
     //sub-area to edit students. Update the edited student's regret if necessary. Any existing school rankings & regrets are recalculated after editing a student.
     public static void editStudents(ArrayList<Student> S, ArrayList<School> H) throws IOException {
     	int nStudents = S.size();
@@ -449,10 +457,8 @@ public class Pro5_laimic12 {
 				Student student = S.get(studentIndex - 1);
 				boolean valid = true;
 
-					
-				student.editInfo(H, false); //allow user to just edit general student info but not ranking, for now
-					
-				
+				student.editInfo(H, false); //allow user to just edit general student info (but not rankings yet)
+
 				//ask user if they want to edit rankings (yes or no)
 				String userInput = "";	//initialize user input 
 				
@@ -476,38 +482,21 @@ public class Pro5_laimic12 {
 					}
 				} while ( valid == false );
 				
-				//error message 
+				
 				if (userInput.equalsIgnoreCase("Y")) { 
+					System.out.println("\nParticipant " + student.getName() + "'s rankings: ");
 					student.editRankings(H); //edit the student's rankings
-
 
 			        //erase then recalculate every school's ranking of students
 					for (int i = 0; i < nSchools; i++) { //loop over each School
 						School school = H.get(i);
-						school.eraseRankings(); //erase the school's rankings of students
-					}
-					
-					//recalculate regrets for both schools and students, and clear rankings of schools
-					for (int i = 0; i < nSchools; i++) {
-						
-						//recalculate regrets for students
-						int matchedStudentIndex = H.get(i).getStudent();
-						int matchedStudentRank = H.get(i).getRanking(matchedStudentIndex);
-						H.get(i).setRegret(matchedStudentRank);
-						
-						//recalculate regrets for schools
-						int matchedSchoolIndex = S.get(i).getSchool();
-						int matchedSchoolRank = S.get(i).getRanking(matchedSchoolIndex); 
-						S.get(i).setRegret(matchedSchoolRank);
+						school.calcRankings(S);
 					}
 				}	
 			}
 			System.out.println("\n");
 		} while ( studentIndex != 0 );
     }
-    */
-    
-    /*
     
     //sub-area to edit schools. Update the edited school's existing rankings and regrets.
     public static void editSchools(ArrayList<Student> S, ArrayList<School> H) throws IOException{
@@ -533,19 +522,11 @@ public class Pro5_laimic12 {
 			//otherwise, edit school
 			else {
 				School school = H.get(schoolIndex - 1);
-				school.eraseRankings(); //erase the pre-existing rankings of this school
-				school.editInfo(S); //edit the info of this school
+				school.editSchoolInfo(S, false); //edit the info of this school
 				school.calcRankings(S); //recalculate the rankings for all schools
-				
-				//recalculate regrets for the edited school
-				int matchedStudentIndex = school.getStudent();
-				int matchedStudentRank = school.getRanking(matchedStudentIndex);
-				school.setRegret(matchedStudentRank);
 			} 
 		} while (schoolIndex != 0 );
     }
-    
-    */
     
     //print students to screen (include matched school if one exists)
     public static void printStudents(ArrayList<Student> S, ArrayList<School> H) throws IOException{

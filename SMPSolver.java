@@ -98,6 +98,12 @@ public class SMPSolver {
 			receiver.clearMatches(); //clear matches for receivers
     	}
     	
+        avgSuitorRegret = 0.0; // reset average suitor regret
+        avgReceiverRegret = 0.0; // reset average receiver regret
+        avgTotalRegret = 0.0; // reset average total regret
+        matchesExist = false; // reset whether or not matches exist
+        stable = true; // reset whether or not matching is stable
+        compTime = 0; // reset computation time
     }
 
     public boolean matchingCanProceed(){ // check that matching rules are satisfied
@@ -288,10 +294,11 @@ public class SMPSolver {
 			avgReceiverRegret = Double.valueOf(totalReceiverRegret) / Double.valueOf(nReceivers);
 			avgTotalRegret = (Double.valueOf(totalSuitorRegret) + Double.valueOf(totalReceiverRegret)) / (nSuitors + nReceivers);
         }	
+		
+		 determineStability();
     }
 
     public boolean determineStability(){ // calculate if a matching is stable
-    	calcRegrets();
     	
     	boolean stable = true;
     	int nReceivers = R.size();
@@ -387,8 +394,6 @@ public class SMPSolver {
 
     public void printStats(){  // print matching statistics
     	if (matchesExist == true) {
-	    	stable = determineStability();
-	    	
 		    //print whether the matching is stable or unstable
 			if (stable == true) {
 				System.out.println("Stable matching? Yes");
@@ -407,14 +412,7 @@ public class SMPSolver {
 
     public void printStatsRow(String rowHeading){ // print stats as row
     	String printStable = "";
-    	
-    	/*
-    	String printAvgReceiverRegret = String.valueOf(avgReceiverRegret);
-    	String printAvgSuitorRegret = String.valueOf(avgSuitorRegret);
-    	String printAvgTotalRegret = String.valueOf(avgTotalRegret);
-    	String printCompTime = String.valueOf(compTime);
-    	*/
-    	
+
     	if (stable == true) {
     		printStable += "Yes";
     	}

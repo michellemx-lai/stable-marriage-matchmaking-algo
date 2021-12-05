@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -33,8 +34,12 @@ public class Student extends Participant{
         this.ES = ES;
     }
 
-    public void editInfo (ArrayList <School> H, boolean canEditRankings){ // user info
-
+    public void editInfo (ArrayList <School> H, boolean canEditRankings) throws IOException { // user info
+		System.out.print("Name: ");
+		super.setName(BasicFunctions.cin.readLine()); //get user input for name
+		GPA = BasicFunctions.getDouble("GPA: ", 0.00, 4.0); //get user input for GPA
+		ES = BasicFunctions.getInteger("Extracurricular score: ", 0, 5); //get user input for ES
+		super.setMaxMatches(BasicFunctions.getInteger("Maximum number of matches: ", 1, Integer.MAX_VALUE)); //get user input for alpha
     }
 
     @Override

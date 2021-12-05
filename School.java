@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.io.IOException;
 
 public class School extends Participant{
     private double alpha; // GPA weight
@@ -24,8 +25,11 @@ public class School extends Participant{
     }
 
     // get new info from the user; cannot be inherited or overridden from parent
-    public void editSchoolInfo(ArrayList <Student> S, boolean canEditRankings){
-        //do something
+    public void editSchoolInfo(ArrayList <Student> S, boolean canEditRankings) throws IOException {
+		System.out.print("Name: ");
+		super.setName(BasicFunctions.cin.readLine()); //get user input for name
+		alpha = BasicFunctions.getDouble("GPA Weight: ", 0.00, 1.00); //get user input for alpha
+		super.setMaxMatches(BasicFunctions.getInteger("Maximum number of matches: ", 1, Integer.MAX_VALUE)); //get user input for alpha
     }
 
     public void calcRankings(ArrayList <Student> S){ // calc rankings from alpha

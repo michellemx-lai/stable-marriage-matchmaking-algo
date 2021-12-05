@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Participant {
@@ -39,17 +40,6 @@ public class Participant {
     }
 
     public int getMatch(int i){
-    	
-    	/*
-    	int matchIndex = -1;
-    	
-		for (int j = 0; j < this.matches.size(); j++) { //loop through all the matches in the matches ArrayList
-			if (i == matches.get(j)) {
-				matchIndex = j + 1;
-			}
-		}
-		*/
-    	
     	int matchIndex = matches.get(i);
 		
 		return matchIndex;
@@ -164,8 +154,40 @@ public class Participant {
         //do something
     }
 
-    public void editRankings(ArrayList <? extends Participant> P){
-        //do something
+    public void editRankings(ArrayList <? extends Participant> P) throws IOException {
+		rankings.clear(); //erase all pre-existing student rankings of schools
+		
+		for (int i = 0; i < P.size(); i++) { //make an arrayList with a size equal to the number of participants
+			rankings.add(0); 
+		}
+
+		//loop over each participant in the ArrayList P
+		for (int i = 0; i < P.size(); i++) {
+			int participantIndex = i + 1; 
+			
+			//index the school object from the list of schools 
+			Participant participant = P.get(i);
+					
+			boolean rankAvailable = false;
+			//while the user keeps assigning the same rank to more than 1 participant, run the loop
+			do {
+				//ask user to type in an assigned rank to the corresponding schools
+				int assignedRank = BasicFunctions.getInteger(participant.getName() + ": ", 1, P.size());
+				
+				if (rankings.get(assignedRank - 1) != 0){ //if the slot for the assigned rank is taken
+					//then an error message is shown (rank has already been used, it's unavailable)
+					System.out.println("ERROR: Rank " + String.valueOf(assignedRank) + " is already used!");
+				}
+				
+				//otherwise the assigned rank is equal to a rank that has not been assigned
+				else { 
+					//the participant index is added to the corresponding index in the ranking array according to the assigned ranking
+					setRanking(participantIndex, assignedRank);
+					
+					rankAvailable = true; //and then the rank is available
+				}
+			} while (rankAvailable == false); //the loop continues until the user enters an available rank
+		}
     }
 
     // print methods
