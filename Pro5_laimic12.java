@@ -172,7 +172,10 @@ public class Pro5_laimic12 {
 	
 			else if (menuInput.equalsIgnoreCase("D")) {
 				if (smpSolverStudentSuitors.matchesExist() == false) { 
-					System.out.print("ERROR: No matches exist!");
+					System.out.print("\n"
+							+ "ERROR: No matches exist!\n"
+							+ "\n"
+							+ "");
 				}
 				else {
 					smpSolverStudentSuitors.print();
@@ -183,7 +186,10 @@ public class Pro5_laimic12 {
 			
 			else if (menuInput.equalsIgnoreCase("X")) {
 				if (smpSolverStudentSuitors.matchesExist() == false) { 
-					System.out.print("ERROR: No matches exist!");
+					System.out.print("\n"
+							+ "ERROR: No matches exist!\n"
+							+ "\n"
+							+ "");
 				}
 				else {
 					printComparison(smpSolverStudentSuitors,smpSolverSchoolSuitors);
@@ -199,14 +205,11 @@ public class Pro5_laimic12 {
 				H2.clear();
 				
 				System.out.print("Database cleared!\n"
-						+ "\n"
-						+ "");
+						+ "\n");
 			}
 	
 			else if (menuInput.equalsIgnoreCase("Q")) {
-	            System.out.print("\n"
-	            		+ "Hasta luego!\n"
-	            		+ "");
+	            System.out.print("Hasta luego!\n");
 				System.exit(0);
 			}
 		} while (menuInput.equalsIgnoreCase("Q") == false);
@@ -544,7 +547,7 @@ public class Pro5_laimic12 {
     	int nStudents = S.size();
     	System.out.format("%-5s%-44s%4s  %2s  %-40s%-21s\n"," #","Name","GPA","ES","Assigned school","Preferred school order");
 		
-		for (int i = 0; i < 126; i++) {
+		for (int i = 0; i < 123; i++) {
 			System.out.print("-");
 		}
         
@@ -564,7 +567,7 @@ public class Pro5_laimic12 {
 
 		System.out.print("\n");
 		
-		for (int i = 0; i < 126; i++) {
+		for (int i = 0; i < 123; i++) {
 			System.out.print("-");
 		}  
 		
@@ -576,7 +579,7 @@ public class Pro5_laimic12 {
 
     	int nSchools = H.size();
     	
-    	System.out.format("\n%-5s%-41s%7s%8s  %-40s%-23s\n"," #","Name","# spots","Weight","Assigned students","Preferred student order");
+    	System.out.format("%-5s%-41s%7s%8s  %-40s%-23s\n"," #","Name","# spots","Weight","Assigned students","Preferred student order");
 		
 		for (int i = 0; i < 126; i++) {
 			System.out.print("-");
@@ -607,8 +610,7 @@ public class Pro5_laimic12 {
 		GSS.setSuitorFirst(false); //students are suitors in this case
 		GSH.setSuitorFirst(true); //schools are suitors in this case
 		 
-		System.out.println("\n"
-					+ "Solution              Stable    Avg school regret   Avg student regret     Avg total regret       Comp time (ms)\n"
+		System.out.println("Solution              Stable    Avg school regret   Avg student regret     Avg total regret       Comp time (ms)\n"
 					+ "----------------------------------------------------------------------------------------------------------------");
 					
 		GSS.printStatsRow("Student optimal");
@@ -670,9 +672,9 @@ public class Pro5_laimic12 {
 			compTimeWinner += "Tie";
 		}
 		
-		System.out.print("----------------------------------------------------------------------------------------------------------------\n"
-		+ "WINNER                   " + stableWinner + "                  " + avgSchoolRegretWinner + "                  " + avgStudentRegretWinner + "                  " + avgTotalRegretWinner + "           " + compTimeWinner + "\n"
-		+ "----------------------------------------------------------------------------------------------------------------\n");
+		System.out.print("----------------------------------------------------------------------------------------------------------------\n");
+		System.out.format("%-24s%4s%21s%21s%21s  %19s\n", "WINNER", stableWinner, avgSchoolRegretWinner, avgStudentRegretWinner, avgTotalRegretWinner, compTimeWinner); //attempt to do spacing
+		System.out.print("----------------------------------------------------------------------------------------------------------------\n\n");
     }
     
     public static ArrayList<School> copySchools(ArrayList<School> P){ //create independent copy of School ArrayList        		
