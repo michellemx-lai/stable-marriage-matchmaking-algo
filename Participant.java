@@ -203,12 +203,13 @@ public class Participant {
 
     // print methods
     public void print(ArrayList <? extends Participant> P){ //print matching and matches
+    	
 		if (matches.size() != 0) {
 			String matchNames = getMatchNames(P); //print matches (assigned participant(s))
-			System.out.format("  %-27s", matchNames);
+			System.out.format("  %-40s", matchNames);
 		}
 		else {
-			System.out.format("  %-27s", "-");
+			System.out.format("  %-40s", "-");
 		}
 		
     	if (rankings.size() != 0) {

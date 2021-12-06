@@ -19,11 +19,11 @@ public class Pro5_laimic12 {
     	SMPSolver smpSolverSchoolSuitors = new SMPSolver();
 		
 		do {
-			//print an error message and ask user for a valid string input each time the user provides an invalid input. 
-            displayMenu();
-            
 			boolean valid;
 			do {
+				//print an error message and ask user for a valid string input each time the user provides an invalid input. 
+	            displayMenu();
+	            
 				valid = true;
 				
 				//invalid if the input is not a string
@@ -542,10 +542,9 @@ public class Pro5_laimic12 {
     public static void printStudents(ArrayList<Student> S, ArrayList<School> H) throws IOException{
     	
     	int nStudents = S.size();
-    	
-		System.out.format("%-3s %-27s%8s%4s  %-27s%-22s\n", " #", "Name", "GPA", "ES", "Assigned school", "Preferred school order");
+    	System.out.format("%-5s%-44s%4s  %2s  %-40s%-21s\n"," #","Name","GPA","ES","Assigned school","Preferred school order");
 		
-		for (int i = 0; i < 94; i++) {
+		for (int i = 0; i < 126; i++) {
 			System.out.print("-");
 		}
         
@@ -554,7 +553,8 @@ public class Pro5_laimic12 {
 		for (int i = 0; i < nStudents; i++) {
 			Student student = S.get(i); //create a student object 
 			int studentIndex = i + 1; 
-			System.out.print(" " + studentIndex + ". "); //print the student index 
+			//System.out.print(" " + studentIndex + ". "); //print the student index 
+			System.out.format("%3d. ", studentIndex);
 			student.print(H); 
 
 			if (i != nStudents - 1) { //print a line after the row unless it's the last row
@@ -564,7 +564,7 @@ public class Pro5_laimic12 {
 
 		System.out.print("\n");
 		
-		for (int i = 0; i < 94; i++) {
+		for (int i = 0; i < 126; i++) {
 			System.out.print("-");
 		}  
 		
@@ -576,9 +576,9 @@ public class Pro5_laimic12 {
 
     	int nSchools = H.size();
     	
-		System.out.format("%-3s %-27s%8s%4s  %-27s%-22s\n", " #", "Name", "# spots", "Weight", "Assigned student", "Preferred student order");
+    	System.out.format("\n%-5s%-41s%7s%8s  %-40s%-23s\n"," #","Name","# spots","Weight","Assigned students","Preferred student order");
 		
-		for (int i = 0; i < 94; i++) {
+		for (int i = 0; i < 126; i++) {
 			System.out.print("-");
 		}
         
@@ -587,7 +587,7 @@ public class Pro5_laimic12 {
 		for (int i = 0; i < nSchools; i++) {
 			School school = H.get(i); //create a school object
 			int schoolIndex = i + 1;
-			System.out.print(" " + schoolIndex + ". ");
+			System.out.format("%3d. ", schoolIndex);
 			school.print(S);
 			
 			if (i != nSchools - 1) { //print a line after the row unless it's the last row
@@ -597,7 +597,7 @@ public class Pro5_laimic12 {
 		
 		System.out.print("\n");
 		
-		for (int i = 0; i < 94; i++) {
+		for (int i = 0; i < 126; i++) {
 			System.out.print("-");
 		}
 		

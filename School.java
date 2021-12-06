@@ -75,7 +75,8 @@ public class School extends Participant{
 
     @Override
     public void print(ArrayList <? extends Participant> S){ // print school row
-		System.out.format("%-27s%4s%8.2f", super.getName(), super.getMaxMatches(), alpha); //print name, weight, and assigned student(s)
+		System.out.format("%-41s%7d%8.2f", super.getName(), super.getMaxMatches(), alpha);
+		
 		super.print(S); //call super-class to print matches (if they exist) and rankings (if they exist)
     }
 

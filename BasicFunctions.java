@@ -12,9 +12,7 @@ public class BasicFunctions {
 	//object to read user input at command line
 	public static BufferedReader cin = new BufferedReader(new InputStreamReader(System. in )); 
 	
-	/*function to take in user input of a valid integer between the lower bound (LB) and upper bound (UB) set by the user. 
-	Prints error messages if user input is invalid. Returns an integer.*/
-	public static int getInteger(String prompt, int LB, int UB) throws IOException, NumberFormatException {
+	public static int getInteger(String prompt, int LB, int UB) throws IOException, NumberFormatException { //take in user input of a valid integer between two bounds set by the user
 		boolean valid;
 		int integerInput = 0;
 
@@ -34,13 +32,13 @@ public class BasicFunctions {
 				valid = false;
 			}
 
-			//if UB is less than the maximum storable value of an int, then the actual UB value is displayed.
+			//display the upper bound if it is less than the max storable value of an integer
 			if ((!valid || integerInput < LB || integerInput > UB) && UB < Integer.MAX_VALUE) {
 				valid = false;
 				System.out.println("\nERROR: Input must be an integer in [" + LB + ", " + UB + "]!\n");
 			}
 
-			//Otherwise if UB is equal to the maximum storable value of a double, then “infinity” is displayed instead of the actual UB value.
+			//display the upper bound as "infinity" if it is less than the max storable value of an integer
 			else if ((!valid || integerInput < LB || integerInput > UB) && UB >= Integer.MAX_VALUE) {
 				valid = false;
 				System.out.println("\nERROR: Input must be an integer in [" + LB + ", infinity]!\n");
@@ -49,13 +47,12 @@ public class BasicFunctions {
 		return integerInput;
 	} //end of getInteger()
 	
-	/*function to take in user input of a valid double between the lower bound (LB) and upper bound (UB) set by the user. 
-	Prints error messages if user input is invalid. Returns a double.*/
+	//function to take in user input of a valid double between two bounds
 	public static double getDouble(String prompt, double LB, double UB) throws IOException, NumberFormatException {
 		boolean valid;
 		Double doubleInput = 0.00;
 
-		//print an error message and ask user for a valid double input each time the user provides an invalid input.
+		//print an error message and ask for valid double input each time an invalid input is provided
 		do {
 			valid = true;
 			System.out.print(prompt);
@@ -71,13 +68,13 @@ public class BasicFunctions {
 				valid = false;
 			}
 
-			//if UB is less than the maximum storable value of a double, then the actual UB value is displayed.
+			//display actual upper bound value of it is less than the max storable value of a double
 			if ((!valid || doubleInput < LB || doubleInput > UB) && UB < Double.MAX_VALUE) {
 				valid = false;
 				System.out.println("\nERROR: Input must be a real number in [" + LB + "0, " + UB + "0]!\n");
 			}
 
-			//Otherwise if UB is equal to the maximum storable value of a double, then “infinity” is displayed instead of the actual UB value.
+			//display "infinity" as the upper bound value if the upper bound is the max storable value of a double
 			else if ((!valid || doubleInput < LB || doubleInput > UB) && UB >= Double.MAX_VALUE) {
 				valid = false;
 				System.out.println("\nERROR: Input must be a real number in [" + LB + "0, infinity]!\n");

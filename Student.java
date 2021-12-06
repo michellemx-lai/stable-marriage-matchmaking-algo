@@ -45,7 +45,7 @@ public class Student extends Participant{
     @Override
     public void print(ArrayList<? extends Participant> H){ // print student row
 		//print name, weight, and assigned Student 
-		System.out.format("%-27s%8.2f%4s", super.getName(), GPA, ES);
+		System.out.format("%-44s%4.2f  %2d", super.getName(), GPA, ES);
     	
     	super.print(H); //call super-class to print matches (if they exist) and rankings (if they exist)
     }
@@ -65,7 +65,5 @@ public class Student extends Participant{
 
 	    
 	    return studentIsValid;
-	    
-	    //make isValida superclass method, and change the according load students method!
     }
 }

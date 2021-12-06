@@ -427,12 +427,10 @@ public class SMPSolver {
     	
     	//check if we should print avg suitor regret first or avg receiver regret first
     	if (suitorFirst == true) {
-			System.out.format("%-27s%4s%8.2f%16.2f%16.2f  %-27s\n", rowHeading, printStable, avgSuitorRegret, avgReceiverRegret, avgTotalRegret, compTime); //attempt to do spacing
-	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
+			System.out.format("%-24s%4s%21.2f%21.2f%21.2f  %19s\n", rowHeading, printStable, avgSuitorRegret, avgReceiverRegret, avgTotalRegret, compTime); //attempt to do spacing
     	}
     	else {
-			System.out.format("%-27s%4s%8.2f%16.2f%16.2f  %-27s\n", rowHeading, printStable, avgReceiverRegret, avgSuitorRegret, avgTotalRegret, compTime); //attempt to do spacing
-	        //System.out.print(rowHeading + "          " + printStable + "                 " + printAvgReceiverRegret + "                 " + printAvgSuitorRegret + "                 " + printAvgTotalRegret + "                   " + printCompTime);
+			System.out.format("%-24s%4s%21.2f%21.2f%21.2f  %19s\n", rowHeading, printStable, avgReceiverRegret, avgSuitorRegret, avgTotalRegret, compTime); //attempt to do spacing
     	}
     }
 
