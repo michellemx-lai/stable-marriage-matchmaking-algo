@@ -1,6 +1,6 @@
-# Stable Marriage Mtchmaking Algorithm
+# Stable Marriage Matchmaking Algorithm
 
-This project builds upon the previous project, where a program was built to match students and schools using principles from the stable marriage problem (SMP). This previous project created a framework for matching students to high schools, and allowed matches to happen between schools and students only. 
+This project builds upon the previous project (schools-admissions-matchmaking-algo), where a program was built to match students and schools using principles from the stable marriage problem (SMP). This previous project created a framework for matching students to high schools, and allowed matches to happen between schools and students only. 
 
 This version of the project generalized the situation so that this code serves as base to match any two groups, not just students and schools. Participants in the matching are allowed to have more than one match (e.g., schools can have more than one opening for students). The remainder of this section provides an overview of SMP and the student-school matching problem from the previous project.
 
@@ -24,6 +24,9 @@ In this project, I have achieved three key objectives:
 
 # User Experience
 All statistics and calculations are printed in a tabular format so users can easily see the comparison between student-optimal and school-optimal solutions. The program does not require manual user input for participant information as it takes in text files as inputs.
+
+# Learnings
+The key learnings from this project are inheritance and polymorphism in Java.
 
 # Demo
 Two text files (students10.txt and schools10.txt) are included as sample input files you can utilize to see how this program works. 
