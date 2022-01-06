@@ -26,4 +26,4 @@ In this project, I have achieved three key objectives:
 All statistics and calculations are printed in a tabular format so users can easily see the comparison between student-optimal and school-optimal solutions. The program does not require manual user input for participant information as it takes in text files as inputs.
 
 # Demo
-Two text files (students10.txt and schools10.txt) as sample input files you can utilize to see how this program works. 
+Two text files (students10.txt and schools10.txt) are included as sample input files you can utilize to see how this program works. 
