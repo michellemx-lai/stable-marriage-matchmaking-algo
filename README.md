@@ -1,4 +1,4 @@
-# Gale-Shapley Algorithm for Matching (Many-to-Many)
+# Stable Marriage Mtchmaking Algorithm
 
 This project builds upon the previous project, where a program was built to match students and schools using principles from the stable marriage problem (SMP). This previous project created a framework for matching students to high schools, and allowed matches to happen between schools and students only. 
 
