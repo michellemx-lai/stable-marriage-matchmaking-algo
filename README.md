@@ -26,7 +26,14 @@ In this project, I have achieved three key objectives:
 All statistics and calculations are printed in a tabular format so users can easily see the comparison between student-optimal and school-optimal solutions. The program does not require manual user input for participant information as it takes in text files as inputs.
 
 # Learnings
-The key learnings from this project are inheritance and polymorphism in Java.
+The key learnings from this project are inheritance and polymorphism in Java. The main takeaways involving object oriented programming include the following:
+
+- Concept of data abstraction and encapsulation
+- Define classes, including data and method attributesLearn how to implement constructors and class methods
+- Inheritance and polymorphism mechanisms
+- Practice using class libraries
+- Basics of linked data structures
+- Learn how to use exception handling 
 
 # Demo
 Two text files (students10.txt and schools10.txt) are included as sample input files you can utilize to see how this program works. 
