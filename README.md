@@ -5,7 +5,9 @@ This project builds upon the previous project (schools-admissions-matchmaking-al
 This version of the project generalized the situation so that this code serves as a base to match any two groups, not just students and schools. Participants in the matching are allowed to have more than one match (e.g., schools can have more than one opening for students). The remainder of this section provides an overview of SMP and the student-school matching problem from the previous project.
 
 # Stable Marriage Problem (SMP)
-SMP is described as follows. Say you have a group of n men and n women, and they need to be matched together in marriage. The men have ranked all the women in order of preference (1 is most preferred, n is least preferred), and the women have similarly ranked all the men in order of preference. The matching solution should make sure that each man is married to exactly one woman and vice versa, and that the marriages are stable. A stable matching solution means that there is no one person who would rather be with someone else who would also prefer to be with them. In other words, no two people would want to have an affair with each other.
+SMP is described as follows:
+
+Say you have a group of n men and n women, and they need to be matched together in marriage. The men have ranked all the women in order of preference (1 is most preferred, n is least preferred), and the women have similarly ranked all the men in order of preference. The matching solution should make sure that each man is married to exactly one woman and vice versa, and that the marriages are stable. A stable matching solution means that there is no one person who would rather be with someone else who would also prefer to be with them. In other words, no two people would want to have an affair with each other.
 
 # Main Objectives
 In this project, I have achieved three key objectives:
